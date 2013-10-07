@@ -1,0 +1,5 @@
+I just put this document in here because git won't let me add an empty folder.
+
+Please put all the assets here and seperate try to keep them tidy.
+
+Maintain player assets seperate from enemies, seperate images, spritesheets, sounds, music.
