@@ -1,0 +1,6 @@
+I make this document for you guys to write more in details what changes you have made. I think it would be useful to see what needs to be done next.
+
+Ex:
+10/7 by Chau
+- I add a new class Blah with damage(), defend()...
+- I modified method Blah so that it now accepts an int instead of a string...
