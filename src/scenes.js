@@ -2,6 +2,13 @@
 // -------------
 // Runs the core gameplay loop
 Crafty.scene('Game', function() {
+  //Paused variable to keep track of whether the game is paused or not
+  var paused = false;
+
+
+  //Running the background music for the game
+  Crafty.audio.play('Background_music_2', -1);
+
   // A 2D array to keep track of all occupied tiles
   this.occupied = new Array(Game.map_grid.width);
   for (var i = 0; i < Game.map_grid.width; i++) {
@@ -30,6 +37,25 @@ Crafty.scene('Game', function() {
       }
     }
   }
+
+  //Pausing
+  Crafty.bind('KeyDown', function(e){
+    if(e.key == Crafty.keys['P']){
+      //Starts music if pausing
+      if(!paused){
+        paused = true;
+        Crafty.audio.stop('Background_music_2');
+        Crafty.audio.play('Background_music', -1);
+      }else{
+        //Stops music when unpausing
+        paused = false;
+        Crafty.audio.play('Background_music_2', -1);
+        Crafty.audio.stop('Background_music');
+      }
+      Crafty.pause();
+    }
+  });
+
 });
 
 // Loading scene
@@ -72,10 +98,15 @@ Crafty.scene('Loading', function(){
     Crafty.sprite(22, 32, 'assets/char_sprites/glass_man.png', {
       spr_player: [0, 0],
     });
+
+
+    //Adding audio files
+    Crafty.audio.add('Background_music', 'assets/music/snappy_lo.mp3');
+    Crafty.audio.add('Background_music_2', 'assets/music/start_up_screen_loop.mp3');
+    Crafty.audio.add('Glass_break', 'assets/sound_effects/glass_break.mp3');
+
  
     // Now that our sprites are ready to draw, start the game
     Crafty.scene('Game');
   });
-
-
 });

@@ -60,8 +60,7 @@ Crafty.c('PlayerCharacter', {
   // Registers a stop-movement function to be called when
   //  this entity hits an entity with the "Solid" component
   stopOnSolids: function() {
-    this.onHit('Solid', this.stopMovement);
- 
+    this.onHit('Solid', this.stopMovement); 
     return this;
   },
  
