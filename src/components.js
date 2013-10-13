@@ -27,6 +27,31 @@ Crafty.c('Actor', {
   },
 });
 
+//Enemies
+Crafty.c('Enemy', {
+  init:function(){
+    this.requires('Actor, Solid');
+  },
+});
+
+Crafty.c('RedEnemy', {
+  init:function(){
+    this.requires('Enemy, red_enemy');
+  },
+});
+
+Crafty.c('YellowEnemy', {
+  init:function(){
+    this.requires('Enemy, yellow_enemy');
+  },
+});
+
+Crafty.c('PurpleEnemy', {
+  init:function(){
+    this.requires('Enemy, purple_enemy');
+  },
+});
+
 //Simple water tile
 Crafty.c('Water', {
   init: function() {
@@ -39,6 +64,7 @@ Crafty.c('Lava', {
   init: function() {
     this.requires('Actor, Solid, tile_lava');
   },
+ 
 });
 
 //Slightly different lava tile to keep the level from looking bland
@@ -48,13 +74,24 @@ Crafty.c('Lava2', {
   },
 });
 
+Crafty.c('Wood', {
+  init:function(){
+    this.requires('Actor, tile_wood');
+  },
+  hitPlayer: function(){
+    console.log("ow");
+    Crafty.scene('Game');
+  },
+})
+
 
 
 Crafty.c('PlayerCharacter', {
   init: function(){
     this.requires('Actor, Fourway, Collision, spr_player')
     .fourway(4)
-    .stopOnSolids();
+    .stopOnSolids()
+    .onHit('Wood', this.hitWood);
   },
 
   // Registers a stop-movement function to be called when
@@ -71,5 +108,10 @@ Crafty.c('PlayerCharacter', {
       this.x -= this._movement.x;
       this.y -= this._movement.y;
     }
+  },
+  hitWood : function(data){
+    wood = data[0].obj;
+    wood.hitPlayer();
+    this.destroy();
   },
 });

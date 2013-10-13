@@ -5,6 +5,8 @@ Crafty.scene('Game', function() {
   //Paused variable to keep track of whether the game is paused or not
   var paused = false;
 
+  //ArrayList of all enemies
+  var enemy_list = [Crafty.e('RedEnemy'), Crafty.e('YellowEnemy'), Crafty.e('PurpleEnemy')];
 
   //Running the background music for the game
   Crafty.audio.play('Background_music_2', -1);
@@ -29,11 +31,14 @@ Crafty.scene('Game', function() {
  
       if (at_edge) {
         // Place a tree entity at the current tile
-        Crafty.e('Water').at(x, y);
+        Crafty.e('Wood').at(x, y);
         this.occupied[x][y] = true;
-      }else if(Math.random() < .1){
+      }else if(Math.random() < .05){
         //Placing lava randomly on the level
-        Crafty.e('Lava').at(x,y);
+        Crafty.e('Lava2').at(x,y);
+      }else if(Math.random() < .05){
+        //Placing random enemies in the level
+        enemy_list[Math.round(Math.random()*2)].at(x,y);
       }
     }
   }
@@ -94,6 +99,16 @@ Crafty.scene('Loading', function(){
       //Giving the sprites a 1 pixel horizontal and vertival padding
     }, 2 , 2);
 
+    //Creating the enemies
+    Crafty.sprite(32, 'assets/char_sprites/red_block.png', {
+      red_enemy: [0,0],
+    });
+    Crafty.sprite(32, 'assets/char_sprites/purple_block.png',{
+      purple_enemy: [0,0],
+    });
+    Crafty.sprite(32, 'assets/char_sprites/yellow_block.png',{
+      yellow_enemy:[0,0],
+    });
     //Load player sprite with a width of 22px and height of 32px
     Crafty.sprite(22, 32, 'assets/char_sprites/glass_man.png', {
       spr_player: [0, 0],
