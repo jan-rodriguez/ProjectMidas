@@ -81,14 +81,35 @@ Crafty.c('Door', {
   },
 });
 
-Crafty.c('Wood', {
-  init:function(){
-    this.requires('Actor, tile_wood');
-  },
-  hitPlayer: function(){
-    console.log("ow");
-    Crafty.scene('Game');
-  },
+Crafty.c('Carpet', {
+	  init:function(){
+	    this.requires('Actor, tile_wood');
+	    this.z = -1; 
+	  },
+		hitPlayer: function(){
+			console.log("ow");
+		  },
+
+	});
+Crafty.c('TopCarpet', {
+	init:function(){
+		this.requires("Carpet");
+		this.hitPlayer =  function(){
+			console.log("banana");
+			Crafty.viewport.follow(this,0,(16*15));
+	  }
+	},
+
+});
+Crafty.c('BottomCarpet', {
+	init:function(){
+		this.requires("Carpet");
+		this.hitPlayer= function(){
+			console.log("ow");
+			Crafty.viewport.follow(this,0,(-16*15));
+		}
+	},
+
 })
 
 Crafty.c('PlayerCharacter', {
@@ -99,9 +120,11 @@ Crafty.c('PlayerCharacter', {
     this.requires('Actor, Fourway, Collision, spr_player')
     .fourway(4)
     .stopOnSolids()
-    .onHit('Wood', this.hitWood)
+    .onHit('Carpet', this.hitCarpet)
     .onHit('Door', this.changeDoor);
+    this.z = 20;
   },
+ 
 
   // Registers a stop-movement function to be called when
   //  this entity hits an entity with the "Solid" component
@@ -118,10 +141,9 @@ Crafty.c('PlayerCharacter', {
       this.y -= this._movement.y;
     }
   },
-  hitWood : function(data){
-    wood = data[0].obj;
-    wood.hitPlayer();
-    this.destroy();
+  hitCarpet : function(data){
+    Carpet = data[0].obj;
+    Carpet.hitPlayer();
   },
   changeDoor: function(data){
     door = data[0].obj;

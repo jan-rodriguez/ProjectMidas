@@ -2,7 +2,7 @@ Game = {
   // This defines our grid's size and the size of each of its tiles
   map_grid: {
     width:  24,
-    height: 16,
+    height: 16*6,
     tile: {
       width:  32,
       height: 32
@@ -17,7 +17,7 @@ Game = {
   // The total height of the game screen. Since our grid takes up the entire screen
   //  this is just the height of a tile times the height of the grid
   height: function() { 
-    return this.map_grid.height * this.map_grid.tile.height;
+    return this.map_grid.height * this.map_grid.tile.height/6;
   },
  
   // Initialize and start our game
