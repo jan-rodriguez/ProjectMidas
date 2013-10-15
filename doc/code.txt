@@ -4,3 +4,11 @@ Ex:
 10/7 by Chau
 - I add a new class Blah with damage(), defend()...
 - I modified method Blah so that it now accepts an int instead of a string...
+
+
+
+- Glass: water ability, can kill red enemies (fire), vulnerable to blue enemies (electricity)
+- Orange: ducky ability, can kill blue enemy (electricity), vulnerable to purple enemies (sharpy)
+- White: eraser ability, can kill enemies instantly
+- Gray: clay ability, can kill purple enemies (sharpy), vulnerable to red enemies (fire)
+- Dice: multiple colors, give random damages, receive random damages

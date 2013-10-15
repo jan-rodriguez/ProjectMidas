@@ -6,7 +6,7 @@ Crafty.scene('Game', function() {
   var paused = false;
 
   //ArrayList of all enemies
-  var enemy_list = ['RedEnemy', 'YellowEnemy', 'PurpleEnemy'];
+  var enemy_list = ['RedEnemy', 'BlueEnemy', 'PurpleEnemy'];
 
   //Running the background music for the game
   // Crafty.audio.play('Background_music_2', -1);
@@ -37,10 +37,36 @@ Crafty.scene('Game', function() {
           //Placing lava randomly on the level
           Crafty.e('Lava2').at(x,y);
           this.occupied[x][y] = true;
+        }else if(Math.random() < .01){
+          //Placing Duck randomly on the level
+          Crafty.e('Duck').at(x,y);
+          this.occupied[x][y] = true;    
+        }else if(Math.random() < .01){
+          //Placing CLay randomly on the level
+          Crafty.e('Clay').at(x,y);
+          this.occupied[x][y] = true; 
+        }else if(Math.random() < .01){
+          //Placing Glass randomly on the level
+          Crafty.e('Glass').at(x,y);
+          this.occupied[x][y] = true; 
+       }else if(Math.random() < .005){
+          //Placing Eraser randomly on the level
+          Crafty.e('Eraser').at(x,y);
+          this.occupied[x][y] = true;           
+        }else if(Math.random() < .01){
+          //Placing Dices randomly on the level
+          Crafty.e('Dice').at(x,y);
+          this.occupied[x][y] = true;   
         }else if(Math.random() < .05){
           //Placing random enemies in the level
           enemy = enemy_list[Math.round(Math.random()*2)];
-          Crafty.e(enemy).at(x,y);
+          // if (enemy === "RedEnemy") {
+          	// Crafty.e("2D, DOM, color, RedEnemy").attr({x: 50, y: 100, w: 22, h: 30}).at(x, y);
+          // }
+          // else {
+          	 // Crafty.e(enemy).at(x,y);
+          // }					Crafty.e(enemy).at(x,y);
+					//Crafty.e('YellowEnemy').at(x,y);
           this.occupied[x][y] = true;
         }
       }
@@ -110,20 +136,57 @@ Crafty.scene('Loading', function(){
     });
 
     //Creating the enemies
-    Crafty.sprite(32, 'assets/char_sprites/red_block.png', {
+    Crafty.sprite(32, 'assets/char_sprites/red_man.png', {
       red_enemy: [0,0],
     });
-    Crafty.sprite(32, 'assets/char_sprites/purple_block.png',{
+    Crafty.sprite(32, 'assets/char_sprites/purple_man.png',{
       purple_enemy: [0,0],
     });
-    Crafty.sprite(32, 'assets/char_sprites/yellow_block.png',{
-      yellow_enemy:[0,0],
+    // Crafty.sprite(32, 'assets/char_sprites/yellow_man.png',{
+      // yellow_enemy:[0,0],
+    // });
+    Crafty.sprite(32, 'assets/char_sprites/blue_man.png',{
+      blue_enemy:[0,0],
     });
     //Load player sprite with a width of 22px and height of 32px
     Crafty.sprite(22, 32, 'assets/char_sprites/glass_man.png', {
       spr_player: [0, 0],
     });
-
+    Crafty.sprite(32, 'assets/char_sprites/glass.png', {
+      glass: [0, 0],
+    });
+    
+    // ducks
+    Crafty.sprite(32, 'assets/char_sprites/duck.png',{
+      duck:[0,0],
+    });
+    Crafty.sprite(32, 'assets/char_sprites/duck_man.png',{
+      duck_man:[0,0],
+    });
+    // erasers
+    Crafty.sprite(32, 'assets/char_sprites/eraser_man.png',{
+      eraser_man:[0,0],
+    });
+    Crafty.sprite(32, 'assets/char_sprites/eraser.png',{
+      eraser:[0,0],
+    });
+    
+    // clays
+    Crafty.sprite(32, 'assets/char_sprites/clay_man.png',{
+      clay_man:[0,0],
+    });
+    Crafty.sprite(32, 'assets/char_sprites/clay.png',{
+      clay:[0,0],
+    });
+       
+    // dices
+		Crafty.sprite(32, 'assets/char_sprites/dice_man.png',{
+      dice_man:[0,0],
+    });
+		Crafty.sprite(32, 'assets/char_sprites/dice.png',{
+      dice:[0,0],
+    });
+		
 
     //Adding audio files
     Crafty.audio.add('Background_music', 'assets/music/snappy_lo.mp3');
