@@ -1,3 +1,4 @@
+//<<<<<<< HEAD
 // The Grid component allows an element to be located
 //  on a grid of tiles
 Crafty.c('Grid', {
@@ -137,15 +138,15 @@ Crafty.c('Door', {
 });
 
 
-Crafty.c('Wood', {
-  init:function(){
-    this.requires('Actor, tile_wood');
-  },
-  hitPlayer: function(){
-    console.log("ow");
-    Crafty.scene('Game');
-  },
-})//create the bullet component
+// Crafty.c('Wood', {
+  // init:function(){
+    // this.requires('Actor, tile_wood');
+  // },
+  // hitPlayer: function(){
+    // console.log("ow");
+    // Crafty.scene('Game');
+  // },
+// })//create the bullet component
 Crafty.c("bullet", {
 	init:function() {
 		this.requires("tile_wood")	
@@ -159,6 +160,41 @@ Crafty.c("bullet", {
         return this;
     }
 });
+
+
+Crafty.c('Carpet', {
+	  init:function(){
+	    this.requires('Actor, tile_wood');
+	    this.z = -1; 
+	  },
+		hitPlayer: function(){
+			console.log("ow");
+		  },
+
+	});
+Crafty.c('TopCarpet', {
+	init:function(){
+		this.requires("Carpet");
+		this.hitPlayer =  function(){
+			console.log("banana");
+			Crafty.viewport.follow(this,0,(16*15));
+	  }
+	},
+
+});
+Crafty.c('BottomCarpet', {
+	init:function(){
+		this.requires("Carpet");
+		this.hitPlayer= function(){
+			console.log("ow");
+			Crafty.viewport.follow(this,0,(-16*15));
+		}
+	},
+
+})
+
+
+
 // Player
 Crafty.c('PlayerCharacter', {
   //Health for the player
@@ -181,7 +217,8 @@ Crafty.c('PlayerCharacter', {
     this.requires('Actor, Fourway, Collision, Delay, spr_player, Keyboard, Stop')
     .fourway(4)
     .stopOnSolids()
-    .onHit('Wood', this.hitWood)
+    .onHit('Carpet', this.hitCarpet)
+    .onHit('Door', this.changeDoor)
     .onHit('Lava2', this.hitLava2)
 		.onHit('Enemy', function() {
 			this.stopMovement;
@@ -222,7 +259,8 @@ Crafty.c('PlayerCharacter', {
         }
         if(e.keyCode === Crafty.keys.RIGHT_ARROW) this.facingRight = true;
         if(e.keyCode === Crafty.keys.LEFT_ARROW) this.facingRight = false;
-    });
+    })
+        this.z = 20;
   },
 
   // Registers a stop-movement function to be called when
@@ -240,12 +278,7 @@ Crafty.c('PlayerCharacter', {
       this.y -= 2*this._movement.y;
     }
   },
-  hitWood : function(data){
-  	console.log("Hit wood");
-    // wood = data[0].obj;
-    // wood.hitPlayer();
-    // this.destroy();
-  },
+
   hitLava2 : function(data) {
   	console.log("hit lava 2");
   	lava2 = data[0].obj;
@@ -299,6 +332,10 @@ Crafty.c('PlayerCharacter', {
 		    blueEnemy.takeDamage(this.attack["blue"][this.element]);    		
     	}
     }
+  },
+  hitCarpet : function(data){
+    Carpet = data[0].obj;
+    Carpet.hitPlayer();
   },
   hitItems: function(data){
   	console.log("Hit some items");

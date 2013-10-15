@@ -21,53 +21,59 @@ Crafty.scene('Game', function() {
   }
  
   // Player character, placed at 5, 5 on our grid
-  this.player = Crafty.e('PlayerCharacter').at(5, 5);
+  this.player = Crafty.e('PlayerCharacter').at(5, 16*6 -5);
   this.occupied[this.player.at().x][this.player.at().y] = true;
  
   // Place a tree at every edge square on our grid of 16x16 tiles
   for (var x = 0; x < Game.map_grid.width; x++) {
     for (var y = 0; y < Game.map_grid.height; y++) {
-      var at_edge = x == 0 || x == Game.map_grid.width - 1 || y == 0 || y == Game.map_grid.height - 1;
+      var at_edge = x == 0 || x == Game.map_grid.width - 1 || y == 0 || y == Game.map_grid.height - 1 ;
+      var room_wall_top = (y ==16*1|| y ==16*2|| y ==16*3|| y ==16*4|| y ==16*5) && x!=12;
+      var room_wall_bot = (y ==16*1-1|| y ==16*2-1|| y ==16*3-1|| y ==16*4-1|| y ==16*5-1) && x!=12;
+      var at_carpet_top = (y ==(16*1) -1|| y ==(16*2)-1|| y ==(16*3)-1|| y ==(16*4)-1|| y ==(16*5)-1) && x==12;
+      var at_carpet_bot = (y ==(16*1) || y ==(16*2)|| y ==(16*3)|| y ==(16*4)|| y ==(16*5)) && x==12;
       if(!this.occupied[x][y]){
-        if (at_edge) {
+        if (at_edge|| room_wall_top ||room_wall_bot) {
           // Place a tree entity at the current tile
           Crafty.e('Door').at(x, y);
           this.occupied[x][y] = true;
-        }else if(Math.random() < .05){
+        }else if(Math.random() < .05 && x!=12){
           //Placing lava randomly on the level
           Crafty.e('Lava2').at(x,y);
           this.occupied[x][y] = true;
-        }else if(Math.random() < .01){
+          
+        }else if(Math.random() < .01 && x!=12){
           //Placing Duck randomly on the level
           Crafty.e('Duck').at(x,y);
           this.occupied[x][y] = true;    
-        }else if(Math.random() < .01){
+        }else if(Math.random() < .01 && x!=12){
           //Placing CLay randomly on the level
           Crafty.e('Clay').at(x,y);
           this.occupied[x][y] = true; 
-        }else if(Math.random() < .01){
+        }else if(Math.random() < .01 && x!=12){
           //Placing Glass randomly on the level
           Crafty.e('Glass').at(x,y);
           this.occupied[x][y] = true; 
-       }else if(Math.random() < .005){
+       }else if(Math.random() < .005 && x!=12){
           //Placing Eraser randomly on the level
           Crafty.e('Eraser').at(x,y);
           this.occupied[x][y] = true;           
-        }else if(Math.random() < .01){
+        }else if(Math.random() < .01 && x!=12){
           //Placing Dices randomly on the level
           Crafty.e('Dice').at(x,y);
-          this.occupied[x][y] = true;   
-        }else if(Math.random() < .05){
+          this.occupied[x][y] = true;             
+          
+        }else if(Math.random() < .05 && x!=12){
           //Placing random enemies in the level
           enemy = enemy_list[Math.round(Math.random()*2)];
-          // if (enemy === "RedEnemy") {
-          	// Crafty.e("2D, DOM, color, RedEnemy").attr({x: 50, y: 100, w: 22, h: 30}).at(x, y);
-          // }
-          // else {
-          	 // Crafty.e(enemy).at(x,y);
-          // }					Crafty.e(enemy).at(x,y);
-					//Crafty.e('YellowEnemy').at(x,y);
+          Crafty.e(enemy).at(x,y);
           this.occupied[x][y] = true;
+        }else if (at_carpet_top){
+        	Crafty.e('TopCarpet').at(x,y);
+        	this.occupied[x][y] = true
+        }else if (at_carpet_bot){
+        	Crafty.e('BottomCarpet').at(x,y);
+        	this.occupied[x][y] = true
         }
       }
     }
@@ -88,9 +94,9 @@ Crafty.scene('Game', function() {
         Crafty.audio.stop('Background_music');
       }
       Crafty.pause();
-    }
+      }
   });
-
+  Crafty.viewport.y = -16*32*5;
 });
 
 // Loading scene
@@ -129,6 +135,27 @@ Crafty.scene('Loading', function(){
       //Giving the sprites a 1 pixel horizontal and vertival padding
     }, 2 , 2);
 
+    // //Door sprites
+    // Crafty.sprite(32, 'assets/tiles/doors.png', {
+      // door_open: [0,0],
+      // door_closed: [1,0],
+    // });
+// 
+    // //Creating the enemies
+    // Crafty.sprite(32, 'assets/char_sprites/red_block.png', {
+      // red_enemy: [0,0],
+    // });
+    // Crafty.sprite(32, 'assets/char_sprites/purple_block.png',{
+      // purple_enemy: [0,0],
+    // });
+    // Crafty.sprite(32, 'assets/char_sprites/yellow_block.png',{
+      // yellow_enemy:[0,0],
+    // });
+    // //Load player sprite with a width of 22px and height of 32px
+    // Crafty.sprite(22, 32, 'assets/char_sprites/glass_man.png', {
+      // spr_player: [0, 0],
+    // });
+
     //Door sprites
     Crafty.sprite(32, 'assets/tiles/doors.png', {
       door_open: [0,0],
@@ -144,7 +171,8 @@ Crafty.scene('Loading', function(){
     });
     // Crafty.sprite(32, 'assets/char_sprites/yellow_man.png',{
       // yellow_enemy:[0,0],
-    // });
+    // });
+
     Crafty.sprite(32, 'assets/char_sprites/blue_man.png',{
       blue_enemy:[0,0],
     });
@@ -186,7 +214,6 @@ Crafty.scene('Loading', function(){
 		Crafty.sprite(32, 'assets/char_sprites/dice.png',{
       dice:[0,0],
     });
-		
 
     //Adding audio files
     Crafty.audio.add('Background_music', 'assets/music/snappy_lo.mp3');
