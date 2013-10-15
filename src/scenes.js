@@ -6,10 +6,10 @@ Crafty.scene('Game', function() {
   var paused = false;
 
   //ArrayList of all enemies
-  var enemy_list = [Crafty.e('RedEnemy'), Crafty.e('YellowEnemy'), Crafty.e('PurpleEnemy')];
+  var enemy_list = ['RedEnemy', 'YellowEnemy', 'PurpleEnemy'];
 
   //Running the background music for the game
-  Crafty.audio.play('Background_music_2', -1);
+  // Crafty.audio.play('Background_music_2', -1);
 
   // A 2D array to keep track of all occupied tiles
   this.occupied = new Array(Game.map_grid.width);
@@ -28,17 +28,21 @@ Crafty.scene('Game', function() {
   for (var x = 0; x < Game.map_grid.width; x++) {
     for (var y = 0; y < Game.map_grid.height; y++) {
       var at_edge = x == 0 || x == Game.map_grid.width - 1 || y == 0 || y == Game.map_grid.height - 1;
- 
-      if (at_edge) {
-        // Place a tree entity at the current tile
-        Crafty.e('Wood').at(x, y);
-        this.occupied[x][y] = true;
-      }else if(Math.random() < .05){
-        //Placing lava randomly on the level
-        Crafty.e('Lava2').at(x,y);
-      }else if(Math.random() < .05){
-        //Placing random enemies in the level
-        enemy_list[Math.round(Math.random()*2)].at(x,y);
+      if(!this.occupied[x][y]){
+        if (at_edge) {
+          // Place a tree entity at the current tile
+          Crafty.e('Door').at(x, y);
+          this.occupied[x][y] = true;
+        }else if(Math.random() < .05){
+          //Placing lava randomly on the level
+          Crafty.e('Lava2').at(x,y);
+          this.occupied[x][y] = true;
+        }else if(Math.random() < .05){
+          //Placing random enemies in the level
+          enemy = enemy_list[Math.round(Math.random()*2)];
+          Crafty.e(enemy).at(x,y);
+          this.occupied[x][y] = true;
+        }
       }
     }
   }
@@ -98,6 +102,12 @@ Crafty.scene('Loading', function(){
       tile_lg_brick_red:      [5, 1],
       //Giving the sprites a 1 pixel horizontal and vertival padding
     }, 2 , 2);
+
+    //Door sprites
+    Crafty.sprite(32, 'assets/tiles/doors.png', {
+      door_open: [0,0],
+      door_closed: [1,0],
+    });
 
     //Creating the enemies
     Crafty.sprite(32, 'assets/char_sprites/red_block.png', {

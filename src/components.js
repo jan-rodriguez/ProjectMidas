@@ -74,6 +74,13 @@ Crafty.c('Lava2', {
   },
 });
 
+//Creating door that the player will walk through to get to different levels
+Crafty.c('Door', {
+  init: function(){
+    this.requires('Actor, door_open');
+  },
+});
+
 Crafty.c('Wood', {
   init:function(){
     this.requires('Actor, tile_wood');
@@ -84,18 +91,23 @@ Crafty.c('Wood', {
   },
 });
 
+
 Crafty.c('PlayerCharacter', {
+  //Health for the player
+  _health: 100,
+
   init: function(){
     this.requires('Actor, Fourway, Collision, spr_player')
     .fourway(4)
     .stopOnSolids()
-    .onHit('Wood', this.hitWood);
+    .onHit('Wood', this.hitWood)
+    .onHit('Door', this.changeDoor);
   },
 
   // Registers a stop-movement function to be called when
   //  this entity hits an entity with the "Solid" component
   stopOnSolids: function() {
-    this.onHit('Solid', this.stopMovement); 
+    this.onHit('Solid', this.stopMovement);
     return this;
   },
  
@@ -113,5 +125,15 @@ Crafty.c('PlayerCharacter', {
     wood = data[0].obj;
     wood.hitPlayer();
     this.destroy();
+  },
+  changeDoor: function(data){
+    door = data[0].obj;
+    //If door is open
+    if(door.has('door_open')){
+      //door will now appear closed
+      door.toggleComponent('door_closed, door_open');
+      //Door will be a solid, that the player cannot pass through
+      door.addComponent('Solid');
+    }
   },
 });
