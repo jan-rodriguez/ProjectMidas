@@ -82,9 +82,7 @@ Crafty.c('Wood', {
     console.log("ow");
     Crafty.scene('Game');
   },
-})
-
-
+});
 
 Crafty.c('PlayerCharacter', {
   init: function(){
@@ -104,10 +102,12 @@ Crafty.c('PlayerCharacter', {
   // Stops the movement
   stopMovement: function() {
     this._speed = 0;
+    
     if (this._movement) {
       this.x -= this._movement.x;
       this.y -= this._movement.y;
     }
+    
   },
   hitWood : function(data){
     wood = data[0].obj;
