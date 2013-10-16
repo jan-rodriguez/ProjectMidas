@@ -86,7 +86,7 @@ Crafty.c('Enemy', {
   init:function(){
     this.requires('Actor, Tween,Collision')
     this.z = 10;
-    .attr({x: 0, y: 0});	
+    this.attr({x: 0, y: 0});	
 
     this.onHit('Solid', this.hitSolid);// get rid solid class so that onHit function works
   },
