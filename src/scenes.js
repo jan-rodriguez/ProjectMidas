@@ -2,6 +2,7 @@
 // -------------
 // Runs the core gameplay loop
 Crafty.scene('Game', function() {
+  Crafty.audio.play('Background_music_2', -1);
   //Paused variable to keep track of whether the game is paused or not
   var paused = false;
   this.atRoom = 1
@@ -132,6 +133,54 @@ Crafty.scene('Game', function() {
   })
   Crafty.viewport.y = -16*32*5;
   Crafty.trigger("BuildRoom",1)
+});
+
+// Title Scene
+//------------
+Crafty.scene('Title', function(){
+  Crafty.e('2D, DOM, Text')
+    .text('MIDAS')
+    .attr({ x: 0, y: 60, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#CCCCCC')
+    .textFont({size:'150px', weight: 'bold'});
+
+  Crafty.e('2D, DOM, Text')
+    .text('[SPACE] to begin')
+    .attr({ x: 0, y: 250, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#ffd700')
+    .textFont({size:'25px', weight: 'bold'});
+
+  Crafty.e('2D, DOM, Text')
+    .text('[P] to pause')
+    .attr({ x: 0, y: 300, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#ffd700')
+    .textFont({size:'25px', weight: 'bold'});
+
+  Crafty.e('2D, DOM, Text')
+    .text('All sounds made by bfxer')
+    .attr({ x: 0, y: Game.height() - 100, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#111111')
+    .textFont({size:'20px', weight: 'italic'});
+
+  Crafty.e('2D, DOM, Text')
+    .text('Philip, Jan, Chau, Arturo, Justin, Pedro')
+    .attr({ x: 0, y: Game.height() - 40, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#111111')
+    .textFont({size:'20px', weight: 'italic'});
+
+  title_bindings = function(e){
+    if (e.key == Crafty.keys.SPACE){
+      Crafty.unbind('KeyDown', title_bindings)
+      Crafty.scene('Game');
+    }
+  }
+
+  Crafty.bind('KeyDown', title_bindings);
 });
 
 Crafty.scene("Victory",function(){
@@ -271,6 +320,6 @@ Crafty.scene('Loading', function(){
 
  
     // Now that our sprites are ready to draw, start the game
-    Crafty.scene('Game');
+    Crafty.scene('Title');
   });
 });

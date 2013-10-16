@@ -1,4 +1,4 @@
-/// The Grid component allows an element to be located
+// The Grid component allows an element to be located
 //  on a grid of tiles
 Crafty.c('Grid', {
   init: function() {
@@ -48,6 +48,7 @@ Crafty.c('Duck', {
     this.requires('Item, duck');		// get rid solid class so that onHit function works
   }
 });
+
 Crafty.c('Dice', {
 	element:"dice",
 	component: "dice_man_left",
@@ -55,6 +56,7 @@ Crafty.c('Dice', {
     this.requires('Item, dice');		// get rid solid class so that onHit function works
   }
 });
+
 Crafty.c('Eraser', {
 	element:"eraser",
 	component: "eraser_man_left",
@@ -62,6 +64,7 @@ Crafty.c('Eraser', {
     this.requires('Item, eraser');		// get rid solid class so that onHit function works
   }
 });
+
 Crafty.c('Clay', {
 	element:"clay",
 	component: "clay_man_left",
@@ -69,6 +72,7 @@ Crafty.c('Clay', {
     this.requires('Item, clay');		// get rid solid class so that onHit function works
   }
 });
+
 Crafty.c('Glass', {
 	element:"glass",
 	component: "glass_man_left",
@@ -76,6 +80,7 @@ Crafty.c('Glass', {
     this.requires('Item, glass');		// get rid solid class so that onHit function works
   }
 });
+
 //Enemies
 Crafty.c('Enemy', {
   init:function(){
@@ -89,7 +94,7 @@ Crafty.c('Enemy', {
 	  this.toggleComponent("Tween");
 	  this.toggleComponent("Tween");
   },
-  	
+
 
   //Method for enemies to take damage
   takeDamage:function(lost) {
@@ -121,28 +126,30 @@ Crafty.c('Enemy', {
     }, 1000, this);
   },    
 });
+
 Crafty.c('RedEnemy', {
+
 	health: 100,
   init:function(){
     this.requires('Enemy, red_enemy')
   },
-
 });
 
-
 Crafty.c('PurpleEnemy', {
+
 	health: 100,
   init:function(){
     this.requires('Enemy, purple_enemy');
   },
 });
+
 Crafty.c('BlueEnemy', {
+
 	health: 100,
 	damages: {"duck": 100},
   init:function(){
     this.requires('Enemy, blue_enemy');
-  },
-  
+  }, 
 });
 
 //Simple water tile
@@ -163,7 +170,6 @@ Crafty.c('Lava', {
   init: function() {
     this.requires('Actor, Solid, tile_lava');
   },
- 
 });
 
 //Slightly different lava tile to keep the level from looking bland
@@ -191,11 +197,12 @@ Crafty.c('Door', {
 Crafty.c("Bullet", {
 	w: 32, h: 32, z:50, alpha: 1.0, x: 0, y: 0,
 	element:"",
+
 	attack: {"red": {"clay": 20, "dice": Math.round(Math.random()*40)+20, "duck": 20, "eraser" : 20, "glass" : 20},
 			"purple" : {"clay": 20, "dice": Math.round(Math.random()*40)+20, "duck": 20, "eraser" : 20, "glass" : 20},
 			"blue" : {"clay": 20, "dice": Math.round(Math.random()*800), "duck": 20, "eraser" : 20, "glass": 20},
 	},
-  
+
 
 	init:function() {
 		this.requires('Actor, bulletobject, 2D, DOM, Tween, Collision')
@@ -257,7 +264,6 @@ Crafty.c('BottomCarpet', {
 	},
 
 })
-
 
 // Player
 Crafty.c('PlayerCharacter', {
@@ -378,6 +384,7 @@ Crafty.c('PlayerCharacter', {
   	this.kill();
   	// Display game over here.
   },
+
   hitRedEnemy : function(data){
   	this.stopMovement;
     redEnemy = data[0].obj;
@@ -391,6 +398,7 @@ Crafty.c('PlayerCharacter', {
     	}
     }
   },
+
   hitPurpleEnemy : function(data){
   	this.stopMovement;
   	// HIT SHARPY: if having duck element. game over. else takes damage depending on types
@@ -423,6 +431,7 @@ Crafty.c('PlayerCharacter', {
     Carpet = data[0].obj;
     Carpet.hitPlayer();
   },
+
   hitItems: function(data){
   	item = data[0].obj;
   	this.element = item.element;
@@ -431,5 +440,4 @@ Crafty.c('PlayerCharacter', {
   	item.destroy();
     Crafty.audio.play('Powerup');
   },
-
 });
