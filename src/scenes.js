@@ -124,6 +124,12 @@ Crafty.scene('Game', function() {
   Crafty.bind("GameWon",function(){
 	  Crafty.scene("Victory");
   })
+  Crafty.bind("PlayerDeath",function(){
+	  console.log("respawn")
+	  var y_spawn = 16*(7-(this.atRoom)) -5
+	  console.log(y_spawn);
+	  this.player = Crafty.e('PlayerCharacter').at(12, y_spawn)
+  })
   Crafty.viewport.y = -16*32*5;
   Crafty.trigger("BuildRoom",1)
 });

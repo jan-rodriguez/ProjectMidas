@@ -357,6 +357,10 @@ Crafty.c('PlayerCharacter', {
     this.onHit('Solid', this.stopMovement);
     return this;
   },
+  kill: function(){
+	  Crafty.trigger("PlayerDeath")
+	  this.destroy()
+  },
  
   // Stops the movement
   stopMovement: function() {
@@ -371,7 +375,7 @@ Crafty.c('PlayerCharacter', {
   	lava2 = data[0].obj;
   	lava2.addComponent('Solid');
     Crafty.audio.play('Hit');
-  	this.destroy();
+  	this.kill();
   	// Display game over here.
   },
   hitRedEnemy : function(data){
@@ -379,10 +383,10 @@ Crafty.c('PlayerCharacter', {
     redEnemy = data[0].obj;
     if (this.element === "eraser") {redEnemy.kill(); }
     else {
-    	if (this.element === "clay") { this.destroy() }
+    	if (this.element === "clay") { this.kill() }
     	else {
 		    this.health -= this.getDamaged["red"][this.element];
-		    if (this.health < 0) { this.destroy();}
+		    if (this.health < 0) { this.kill();}
 		    redEnemy.takeDamage(this.attack["red"][this.element]);    		
     	}
     }
@@ -393,10 +397,10 @@ Crafty.c('PlayerCharacter', {
     PurpleEnemy = data[0].obj;
     if (this.element === "eraser") {PurpleEnemy.kill(); }
     else {
-    	if (this.element === "duck") { this.destroy() }
+    	if (this.element === "duck") { this.kill() }
     	else {
 		    this.health -= this.getDamaged["purple"][this.element];
-		    if (this.health < 0) { this.destroy();}
+		    if (this.health < 0) { this.kill();}
 		    PurpleEnemy.takeDamage(this.attack["purple"][this.element]);    		
     	}
     }
@@ -407,10 +411,10 @@ Crafty.c('PlayerCharacter', {
   	blueEnemy = data[0].obj;
     if (this.element === "eraser") {blueEnemy.kill(); }
     else {
-    	if (this.element === "glass") { this.destroy() }
+    	if (this.element === "glass") { this.kill() }
     	else {
 		    this.health -= this.getDamaged["blue"][this.element];
-		    if (this.health < 0) { this.destroy();}
+		    if (this.health < 0) { this.kill();}
 		    blueEnemy.takeDamage(this.attack["blue"][this.element]);    		
     	}
     }
