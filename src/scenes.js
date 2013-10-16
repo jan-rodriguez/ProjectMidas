@@ -9,7 +9,7 @@ Crafty.scene('Game', function() {
   var enemy_list = ['RedEnemy', 'BlueEnemy', 'PurpleEnemy'];
 
   //Running the background music for the game
-  // Crafty.audio.play('Background_music_2', -1);
+  Crafty.audio.play('Background_music_2', -1);
 
   // A 2D array to keep track of all occupied tiles
   this.occupied = new Array(Game.map_grid.width);
@@ -76,7 +76,6 @@ Crafty.scene('Game', function() {
           this.occupied[x][y] = true;
         }else if (at_carpet_top){
         	Crafty.e('TopCarpet',room).at(x,y);
-        	Crafty.e('Door',room).at(x,y);
         	this.occupied[x][y] = true
         }else if (at_carpet_bot){
         	Crafty.e('BottomCarpet',room).at(x,y);
@@ -108,9 +107,10 @@ Crafty.scene('Game', function() {
     Crafty.bind("EnemyDeath",function(){
     	for (var i = 1; i <7;i++){
     		var room = "Room"+String(i)
+    		console.log(!Crafty(room+" Enemy").length)
     		//Checks if there are no more enemies in room i (true if yes)
-    		if (!Crafty(room,"Enemy").length){
-    			Crafty(room,"Door")
+    		if (!Crafty(room+" Enemy").length){
+    			Crafty(room+" Door").doorOpen()
     		}
     	}
   });
@@ -181,17 +181,17 @@ Crafty.scene('Loading', function(){
     });
 
     //Creating the enemies
-    Crafty.sprite(32, 'assets/char_sprites/red_man.png', {
+    Crafty.sprite(22, 32, 'assets/char_sprites/red_man.png', {
       red_enemy: [0,0],
     });
-    Crafty.sprite(32, 'assets/char_sprites/purple_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/purple_man.png',{
       purple_enemy: [0,0],
     });
     // Crafty.sprite(32, 'assets/char_sprites/yellow_man.png',{
       // yellow_enemy:[0,0],
     // });
 
-    Crafty.sprite(32, 'assets/char_sprites/blue_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/blue_man.png',{
       blue_enemy:[0,0],
     });
 
@@ -217,7 +217,6 @@ Crafty.scene('Loading', function(){
     Crafty.sprite(32, 'assets/char_sprites/duck.png',{
       duck:[0,0],
     });
-
 
     Crafty.sprite(32, 'assets/char_sprites/eraser.png',{
       eraser:[0,0],

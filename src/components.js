@@ -82,16 +82,22 @@ Crafty.c('Enemy', {
     this.requires('Actor, Tween')
     .attr({x: 0, y: 0});		// get rid solid class so that onHit function works
   },
+  
   //Method for enemies to take damage
   takeDamage:function(lost) {
   	this.health -= lost;
-  	if (this.health < 0) this.destroy();
+  	if (this.health < 0){
+      this.kill()
+    };
+
+  },
+  kill: function () {
+	  this.destroy();
+	  Crafty.trigger("EnemyDeath");
   },
   //Random moving around function for the enemies
   moveAround:function(){
-    console.log("randomly moving enemy");
     window.setInterval(function(enemy){
-      console.log("randomly moving enemy inside function");
       var rand = Math.random();
       if(rand<.3){
         enemy.tween({x: enemy.x + 50}, 50);
@@ -180,8 +186,9 @@ Crafty.c("Bullet", {
 	attack: {"red": {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
 			"purple" : {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
 			"blue" : {"clay": 10, "dice": Math.round(Math.random()*800), "duck": 10, "eraser" : 20, "glass": 10},
-			
 	},
+  
+
 	init:function() {
 		this.requires('Actor, bulletobject, 2D, DOM, Tween, Collision')
 		.onHit('RedEnemy', this.shootRedEnemy)
@@ -359,7 +366,7 @@ Crafty.c('PlayerCharacter', {
   hitRedEnemy : function(data){
   	this.stopMovement;
     redEnemy = data[0].obj;
-    if (this.element === "eraser") {redEnemy.destroy(); }
+    if (this.element === "eraser") {redEnemy.kill(); }
     else {
     	if (this.element === "clay") { this.destroy() }
     	else {
@@ -373,7 +380,7 @@ Crafty.c('PlayerCharacter', {
   	this.stopMovement;
   	// HIT SHARPY: if having duck element. game over. else takes damage depending on types
     PurpleEnemy = data[0].obj;
-    if (this.element === "eraser") {PurpleEnemy.destroy(); }
+    if (this.element === "eraser") {PurpleEnemy.kill(); }
     else {
     	if (this.element === "duck") { this.destroy() }
     	else {
@@ -387,7 +394,7 @@ Crafty.c('PlayerCharacter', {
   	this.stopMovement;
   	// hit ELECTRICITY: if having glass element, game over. else takes damage depending on types
   	blueEnemy = data[0].obj;
-    if (this.element === "eraser") {blueEnemy.destroy(); }
+    if (this.element === "eraser") {blueEnemy.kill(); }
     else {
     	if (this.element === "glass") { this.destroy() }
     	else {
