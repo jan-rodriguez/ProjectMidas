@@ -96,14 +96,25 @@ Crafty.scene('Game', function() {
     if(e.key == Crafty.keys['P']){
       //Starts music if pausing
       if(!paused){
-        paused = true;
+    	x_spot= this.player._x;
+    	y_spot = this.player._y;
         Crafty.audio.stop('Background_music_2');
         Crafty.audio.play('Background_music', -1);
+        this.text = Crafty.e('2D, DOM, Text')
+        .text('[SPACE] to begin')
+        .attr({ x: x_spot, y: y_spot, h: 10, w: Game.width() })
+        .css($text_css)
+        .textColor('#ffd700')
+        .textFont({size:'25px', weight: 'bold'});
+        Crafty.viewport.centerOn(this.text)
+        paused = true;
       }else{
         //Stops music when unpausing
         paused = false;
         Crafty.audio.play('Background_music_2', -1);
         Crafty.audio.stop('Background_music');
+        this.text.destroy()
+        Crafty.viewport.centerOn(this.player)
       }
       Crafty.pause();
       }
