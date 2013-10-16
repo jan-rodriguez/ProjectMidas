@@ -205,9 +205,9 @@ Crafty.c("Bullet", {
   ,
   bullet: function(dir){
   	if (dir == "e") {
-  		this.tween({alpha: 0.0, x: this.x + 200, y: this.y}, 20);
+  		this.tween({alpha: 0.0, x: this.x + 100, y: this.y}, 10);
   	}
-  	else if (dir == "w"){this.tween({alpha: 0.0, x: this.x -200, y: this.y}, 20);}
+  	else if (dir == "w"){this.tween({alpha: 0.0, x: this.x -100, y: this.y}, 10);}
   },
   shootRedEnemy: function(data){
   	redEnemy = data[0].obj;
@@ -262,7 +262,7 @@ Crafty.c('BottomCarpet', {
 // Player
 Crafty.c('PlayerCharacter', {
   //Health for the player
-  _health: 2000,
+  _health: 100,
   element: "glass",
 	component: "glass_man_right",
 	attack: {

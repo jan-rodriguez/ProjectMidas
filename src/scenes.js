@@ -250,3 +250,12 @@ Crafty.scene('Loading', function(){
     Crafty.scene('Game');
   });
 });
+
+Crafty.scene('GameOver', function(){
+  // Draw some text for the player to see in case the file
+  //  takes a noticeable amount of time to load
+  Crafty.e('2D, DOM, Text')
+    .text('Congratulations, you fought your way past the clutches of the evil scientists and defeated all those who stood against you.')
+    .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
+    .css($text_css);
+});
