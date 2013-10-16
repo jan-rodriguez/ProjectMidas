@@ -187,47 +187,8 @@ Crafty.c("Bullet", {
 			"blue" : {"clay": 10, "dice": Math.round(Math.random()*800), "duck": 10, "eraser" : 20, "glass": 10},
 			
 	},
-    bullet: function(dir) {
-        this.bind("enterframe", function() {
-            this.move(dir, 15);
-            if(this.x > Crafty.viewport.width || this.x < 0) 
-                this.destroy();
-        });
-        return this;
-    }
-});
+  
 
-
-Crafty.c('Carpet', {
-	  init:function(){
-	    this.requires('Actor, tile_wood');
-	    this.z = -1; 
-	  },
-		hitPlayer: function(){
-		  },
-
-	});
-Crafty.c('TopCarpet', {
-	init:function(){
-		this.requires("Carpet");
-		this.hitPlayer =  function(){
-			Crafty.viewport.follow(this,0,(16*15));
-	  }
-	},
-
-});
-Crafty.c('BottomCarpet', {
-	init:function(){
-		this.requires("Carpet");
-		this.hitPlayer= function(){
-			Crafty.viewport.follow(this,0,(-16*15));
-		}
-	},
-
-})
-
-
-=======
 	init:function() {
 		this.requires('Actor, bulletobject, 2D, DOM, Tween, Collision')
 		.onHit('RedEnemy', this.shootRedEnemy)
@@ -287,7 +248,6 @@ Crafty.c('BottomCarpet', {
 
 })
 
->>>>>>> fb1e147ecc049c9bdd32567bb694b96abb86cdd7
 
 // Player
 Crafty.c('PlayerCharacter', {
