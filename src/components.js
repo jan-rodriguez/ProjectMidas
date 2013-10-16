@@ -92,7 +92,7 @@ Crafty.c('Enemy', {
   //Method for enemies to take damage
   takeDamage:function(lost) {
   	this.health -= lost;
-  	if (this.health < 0){
+  	if (this.health <= 0){
       this.kill()
     };
 
@@ -120,7 +120,7 @@ Crafty.c('Enemy', {
   },    
 });
 Crafty.c('RedEnemy', {
-	health: 2000,
+	health: 100,
   init:function(){
     this.requires('Enemy, red_enemy')
   },
@@ -129,13 +129,13 @@ Crafty.c('RedEnemy', {
 
 
 Crafty.c('PurpleEnemy', {
-	health: 2000,
+	health: 100,
   init:function(){
     this.requires('Enemy, purple_enemy');
   },
 });
 Crafty.c('BlueEnemy', {
-	health: 2000,
+	health: 100,
 	damages: {"duck": 100},
   init:function(){
     this.requires('Enemy, blue_enemy');
@@ -188,9 +188,9 @@ Crafty.c('Door', {
 Crafty.c("Bullet", {
 	w: 32, h: 32, z:50, alpha: 1.0, x: 0, y: 0,
 	element:"",
-	attack: {"red": {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
-			"purple" : {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
-			"blue" : {"clay": 10, "dice": Math.round(Math.random()*800), "duck": 10, "eraser" : 20, "glass": 10},
+	attack: {"red": {"clay": 20, "dice": Math.round(Math.random()*40)+20, "duck": 20, "eraser" : 20, "glass" : 20},
+			"purple" : {"clay": 20, "dice": Math.round(Math.random()*40)+20, "duck": 20, "eraser" : 20, "glass" : 20},
+			"blue" : {"clay": 20, "dice": Math.round(Math.random()*800), "duck": 20, "eraser" : 20, "glass": 20},
 	},
   
 
@@ -198,26 +198,31 @@ Crafty.c("Bullet", {
 		this.requires('Actor, bulletobject, 2D, DOM, Tween, Collision')
 		.onHit('RedEnemy', this.shootRedEnemy)
 		.onHit('PurpleEnemy', this.shootPurpleEnemy)
-		.onHit('BlueEnemy', this.shootPurpleEnemy);		
+		.onHit('BlueEnemy', this.shootPurpleEnemy)
+    .onHit('Solid', function(){
+      this.destroy()});		
   }
   ,
   bullet: function(dir){
   	if (dir == "e") {
-  		this.tween({alpha: 0.0, x: this.x + 100, y: this.y}, 60);
+  		this.tween({alpha: 0.0, x: this.x + 200, y: this.y}, 20);
   	}
-  	else if (dir == "w"){this.tween({alpha: 0.0, x: this.x -100, y: this.y}, 60);}
+  	else if (dir == "w"){this.tween({alpha: 0.0, x: this.x -200, y: this.y}, 20);}
   },
   shootRedEnemy: function(data){
   	redEnemy = data[0].obj;
   	redEnemy.takeDamage(this.attack["red"][this.element]);
+    this.destroy();
   },
   shootPurpleEnemy: function(data){
   	purpleEnemy = data[0].obj;
   	purpleEnemy.takeDamage(this.attack["purple"][this.element]);
+    this.destroy();
   },
   shootBlueEnemy: function(data){
   	blueEnemy = data[0].obj;
   	blueEnemy.takeDamage(this.attack["blue"][this.element]);
+    this.destroy();
   },
 });
 
@@ -298,7 +303,7 @@ Crafty.c('PlayerCharacter', {
                 }, 100);
                 
                 //this.stop();
-                //Crafty.audio.play("Hit");             
+                Crafty.audio.play('Laser');             
                 var bx, dir;
                 if(this.facingRight) {
                     //this.sprite(5,2,1,2);
@@ -365,6 +370,7 @@ Crafty.c('PlayerCharacter', {
   hitLava2 : function(data) {
   	lava2 = data[0].obj;
   	lava2.addComponent('Solid');
+    Crafty.audio.play('Hit');
   	this.destroy();
   	// Display game over here.
   },
@@ -419,6 +425,7 @@ Crafty.c('PlayerCharacter', {
   	this.toggleComponent(this.component, item.component);
   	this.component = item.component;
   	item.destroy();
+    Crafty.audio.play('Powerup');
   },
 
 });
