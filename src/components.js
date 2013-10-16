@@ -1,4 +1,4 @@
-/// The Grid component allows an element to be located
+// The Grid component allows an element to be located
 //  on a grid of tiles
 Crafty.c('Grid', {
   init: function() {
@@ -48,6 +48,7 @@ Crafty.c('Duck', {
     this.requires('Item, duck');		// get rid solid class so that onHit function works
   }
 });
+
 Crafty.c('Dice', {
 	element:"dice",
 	component: "dice_man_left",
@@ -55,6 +56,7 @@ Crafty.c('Dice', {
     this.requires('Item, dice');		// get rid solid class so that onHit function works
   }
 });
+
 Crafty.c('Eraser', {
 	element:"eraser",
 	component: "eraser_man_left",
@@ -62,6 +64,7 @@ Crafty.c('Eraser', {
     this.requires('Item, eraser');		// get rid solid class so that onHit function works
   }
 });
+
 Crafty.c('Clay', {
 	element:"clay",
 	component: "clay_man_left",
@@ -69,6 +72,7 @@ Crafty.c('Clay', {
     this.requires('Item, clay');		// get rid solid class so that onHit function works
   }
 });
+
 Crafty.c('Glass', {
 	element:"glass",
 	component: "glass_man_left",
@@ -76,18 +80,21 @@ Crafty.c('Glass', {
     this.requires('Item, glass');		// get rid solid class so that onHit function works
   }
 });
+
 //Enemies
 Crafty.c('Enemy', {
   init:function(){
     this.requires('Actor, Tween,Collision')
     .attr({x: 0, y: 0});	
+
     this.onHit('Solid', this.hitSolid);// get rid solid class so that onHit function works
   },
+
   hitSolid:function(){
 	  this.toggleComponent("Tween");
 	  this.toggleComponent("Tween");
   },
-  	
+
 
   //Method for enemies to take damage
   takeDamage:function(lost) {
@@ -119,28 +126,30 @@ Crafty.c('Enemy', {
     }, 1000, this);
   },    
 });
+
 Crafty.c('RedEnemy', {
+
 	health: 100,
   init:function(){
     this.requires('Enemy, red_enemy')
   },
-
 });
 
-
 Crafty.c('PurpleEnemy', {
+
 	health: 100,
   init:function(){
     this.requires('Enemy, purple_enemy');
   },
 });
+
 Crafty.c('BlueEnemy', {
+
 	health: 100,
 	damages: {"duck": 100},
   init:function(){
     this.requires('Enemy, blue_enemy');
-  },
-  
+  }, 
 });
 
 //Simple water tile
@@ -161,14 +170,14 @@ Crafty.c('Lava', {
   init: function() {
     this.requires('Actor, Solid, tile_lava');
   },
- 
 });
 
 //Slightly different lava tile to keep the level from looking bland
 Crafty.c('Lava2', {
   init: function() {
-    this.requires('Actor, tile_lava_2');  // get rid of Solid so that onHit function could work
-  },
+    this.requires('Actor, tile_lava_2');
+
+     },
 });
 
 //Creating door that the player will walk through to get to different levels
@@ -188,11 +197,12 @@ Crafty.c('Door', {
 Crafty.c("Bullet", {
 	w: 32, h: 32, z:50, alpha: 1.0, x: 0, y: 0,
 	element:"",
+
 	attack: {"red": {"clay": 20, "dice": Math.round(Math.random()*40)+20, "duck": 20, "eraser" : 20, "glass" : 20},
 			"purple" : {"clay": 20, "dice": Math.round(Math.random()*40)+20, "duck": 20, "eraser" : 20, "glass" : 20},
 			"blue" : {"clay": 20, "dice": Math.round(Math.random()*800), "duck": 20, "eraser" : 20, "glass": 20},
 	},
-  
+
 
 	init:function() {
 		this.requires('Actor, bulletobject, 2D, DOM, Tween, Collision')
@@ -233,7 +243,6 @@ Crafty.c('Carpet', {
 	    this.z = -1; 
 	  },
 		hitPlayer: function(){
-			console.log("ow");
 		  },
 
 	});
@@ -241,7 +250,6 @@ Crafty.c('TopCarpet', {
 	init:function(){
 		this.requires("Carpet");
 		this.hitPlayer =  function(){
-			console.log("banana");
 			Crafty.viewport.follow(this,0,(16*15));
 	  }
 	},
@@ -251,13 +259,11 @@ Crafty.c('BottomCarpet', {
 	init:function(){
 		this.requires("Carpet");
 		this.hitPlayer= function(){
-			console.log("ow");
 			Crafty.viewport.follow(this,0,(-16*15));
 		}
 	},
 
 })
-
 
 // Player
 Crafty.c('PlayerCharacter', {
@@ -319,7 +325,7 @@ Crafty.c('PlayerCharacter', {
                 this.trigger("change",old);
             }
         }
-        if(e.keyCode === Crafty.keys.RIGHT_ARROW){
+        if(e.keyCode === Crafty.keys.RIGHT_ARROW  || e.keyCode === Crafty.keys.D){
           this.facingRight = true;
           if(this.has('glass_man_left')){
             this.toggleComponent( 'glass_man_left', 'glass_man_right');
@@ -333,7 +339,7 @@ Crafty.c('PlayerCharacter', {
             this.toggleComponent( 'clay_man_left', 'clay_man_right');
           }
         } 
-        if(e.keyCode === Crafty.keys.LEFT_ARROW){
+        if(e.keyCode === Crafty.keys.LEFT_ARROW || e.keyCode === Crafty.keys.A){
           this.facingRight = false;
           if(this.has('glass_man_right')){
             this.toggleComponent( 'glass_man_right', 'glass_man_left');
@@ -357,6 +363,10 @@ Crafty.c('PlayerCharacter', {
     this.onHit('Solid', this.stopMovement);
     return this;
   },
+  kill: function(){
+	  Crafty.trigger("PlayerDeath")
+	  this.destroy()
+  },
  
   // Stops the movement
   stopMovement: function() {
@@ -371,32 +381,34 @@ Crafty.c('PlayerCharacter', {
   	lava2 = data[0].obj;
   	lava2.addComponent('Solid');
     Crafty.audio.play('Hit');
-  	this.destroy();
+  	this.kill();
   	// Display game over here.
   },
+
   hitRedEnemy : function(data){
   	this.stopMovement;
     redEnemy = data[0].obj;
     if (this.element === "eraser") {redEnemy.kill(); }
     else {
-    	if (this.element === "clay") { this.destroy() }
+    	if (this.element === "clay") { this.kill() }
     	else {
 		    this.health -= this.getDamaged["red"][this.element];
-		    if (this.health < 0) { this.destroy();}
+		    if (this.health < 0) { this.kill();}
 		    redEnemy.takeDamage(this.attack["red"][this.element]);    		
     	}
     }
   },
+
   hitPurpleEnemy : function(data){
   	this.stopMovement;
   	// HIT SHARPY: if having duck element. game over. else takes damage depending on types
     PurpleEnemy = data[0].obj;
     if (this.element === "eraser") {PurpleEnemy.kill(); }
     else {
-    	if (this.element === "duck") { this.destroy() }
+    	if (this.element === "duck") { this.kill() }
     	else {
 		    this.health -= this.getDamaged["purple"][this.element];
-		    if (this.health < 0) { this.destroy();}
+		    if (this.health < 0) { this.kill();}
 		    PurpleEnemy.takeDamage(this.attack["purple"][this.element]);    		
     	}
     }
@@ -407,10 +419,10 @@ Crafty.c('PlayerCharacter', {
   	blueEnemy = data[0].obj;
     if (this.element === "eraser") {blueEnemy.kill(); }
     else {
-    	if (this.element === "glass") { this.destroy() }
+    	if (this.element === "glass") { this.kill() }
     	else {
 		    this.health -= this.getDamaged["blue"][this.element];
-		    if (this.health < 0) { this.destroy();}
+		    if (this.health < 0) { this.kill();}
 		    blueEnemy.takeDamage(this.attack["blue"][this.element]);    		
     	}
     }
@@ -419,6 +431,7 @@ Crafty.c('PlayerCharacter', {
     Carpet = data[0].obj;
     Carpet.hitPlayer();
   },
+
   hitItems: function(data){
   	item = data[0].obj;
   	this.element = item.element;
@@ -427,5 +440,4 @@ Crafty.c('PlayerCharacter', {
   	item.destroy();
     Crafty.audio.play('Powerup');
   },
-
 });
