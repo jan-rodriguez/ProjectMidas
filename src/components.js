@@ -1,3 +1,4 @@
+
 // The Grid component allows an element to be located
 //  on a grid of tiles
 Crafty.c('Grid', {
@@ -79,14 +80,37 @@ Crafty.c('Glass', {
 //Enemies
 Crafty.c('Enemy', {
   init:function(){
-    this.requires('Actor');		// get rid solid class so that onHit function works
+    this.requires('Actor, Tween')
+    .attr({x: 0, y: 0});		// get rid solid class so that onHit function works
   },
+  //Method for enemies to take damage
   takeDamage:function(lost) {
   	console.log(this.health);
   	this.health -= lost;
   	console.log(this.health);
-  	if (this.health < 0) this.destroy();
-  }  
+  	if (this.health < 0){
+      this.destroy()
+    };
+  },
+  //Random moving around function for the enemies
+  moveAround:function(){
+    console.log("randomly moving enemy");
+    window.setInterval(function(enemy){
+      console.log("randomly moving enemy inside function");
+      var rand = Math.random();
+      if(rand<.3){
+        enemy.tween({x: enemy.x + 50}, 50);
+      }else if(rand<.6){
+        enemy.tween({x:enemy.x - 50}, 50);
+      }
+      rand = Math.random();
+      if(rand <.3){
+        enemy.tween({y: enemy.y + 50}, 50);
+      }else if(rand <.6){
+        enemy.tween({y:enemy.y - 50}, 50);
+      }
+    }, 1000, this);
+  },    
 });
 
 Crafty.c('RedEnemy', {
@@ -165,6 +189,7 @@ Crafty.c("bullet", {
     }
 });
 
+
 Crafty.c('Carpet', {
 	  init:function(){
 	    this.requires('Actor, tile_wood');
@@ -194,6 +219,7 @@ Crafty.c('BottomCarpet', {
 		}
 	},
 })
+
 
 // Player
 Crafty.c('PlayerCharacter', {
@@ -336,26 +362,10 @@ Crafty.c('PlayerCharacter', {
 		    blueEnemy.takeDamage(this.attack["blue"][this.element]);    		
     	}
     }
-
   },
-
   hitCarpet : function(data){
     Carpet = data[0].obj;
     Carpet.hitPlayer();
-  },
-
-  changeDoor: function(data){
-    door = data[0].obj;
-    //If door is open
-    if(door.has('door_open')){
-      //door will now appear closed
-      door.toggleComponent('door_closed, door_open');
-      //Door will be a solid, that the player cannot pass through
-      door.addComponent('Solid');
-    }
-  },
-  hitByEnemy: function(data){
-    this.destroy();
   },
 
   hitItems: function(data){
