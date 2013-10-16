@@ -79,10 +79,15 @@ Crafty.c('Glass', {
 //Enemies
 Crafty.c('Enemy', {
   init:function(){
-    this.requires('Actor, Tween')
-    .attr({x: 0, y: 0});		// get rid solid class so that onHit function works
+    this.requires('Actor, Tween,Collision')
+    .attr({x: 0, y: 0});	
+    this.onHit('Solid', this.hitSolid);// get rid solid class so that onHit function works
   },
-
+  hitSolid:function(){
+	  this.toggleComponent("Tween");
+	  this.toggleComponent("Tween");
+  },
+  	
   //Method for enemies to take damage
   takeDamage:function(lost) {
   	this.health -= lost;
