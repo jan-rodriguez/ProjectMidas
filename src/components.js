@@ -80,14 +80,37 @@ Crafty.c('Glass', {
 //Enemies
 Crafty.c('Enemy', {
   init:function(){
-    this.requires('Actor');		// get rid solid class so that onHit function works
+    this.requires('Actor, Tween')
+    .attr({x: 0, y: 0});		// get rid solid class so that onHit function works
   },
+  //Method for enemies to take damage
   takeDamage:function(lost) {
   	console.log(this.health);
   	this.health -= lost;
   	console.log(this.health);
-  	if (this.health < 0) this.destroy();
-  }  
+  	if (this.health < 0){
+      this.destroy()
+    };
+  },
+  //Random moving around function for the enemies
+  moveAround:function(){
+    console.log("randomly moving enemy");
+    window.setInterval(function(enemy){
+      console.log("randomly moving enemy inside function");
+      var rand = Math.random();
+      if(rand<.3){
+        enemy.tween({x: enemy.x + 50}, 50);
+      }else if(rand<.6){
+        enemy.tween({x:enemy.x - 50}, 50);
+      }
+      rand = Math.random();
+      if(rand <.3){
+        enemy.tween({y: enemy.y + 50}, 50);
+      }else if(rand <.6){
+        enemy.tween({y:enemy.y - 50}, 50);
+      }
+    }, 1000, this);
+  },    
 });
 Crafty.c('RedEnemy', {
 	health: 2000,
@@ -165,7 +188,9 @@ Crafty.c('Door', {
     // console.log("ow");
     // Crafty.scene('Game');
   // },
-// })//create the bullet component
+// })
+
+//create the bullet component
 Crafty.c("bullet", {
 	init:function() {
 		this.requires("tile_wood")	
@@ -235,9 +260,9 @@ Crafty.c('PlayerCharacter', {
   init: function(){
     this.requires('Actor, Fourway, Collision, Delay, spr_player, Keyboard, Stop')
     .fourway(4)
+
     .stopOnSolids()
     .onHit('Carpet', this.hitCarpet)
-    //.onHit('Door', this.changeDoor)
     .onHit('Lava2', this.hitLava2)
 		.onHit('Enemy', function() {
 			this.stopMovement;
@@ -273,7 +298,8 @@ Crafty.c('PlayerCharacter', {
                 
                 Crafty.e("2D, DOM, color, bullet").attr({x: bx, y: this.y + 31, w: 5, h: 2, z:50}).bullet(dir);
                 // var old = this.pos();
-                // this.trigger("change",old);
+                // this.trigger("change",old);
+
             }
         }
         if(e.keyCode === Crafty.keys.RIGHT_ARROW) this.facingRight = true;
@@ -323,7 +349,8 @@ Crafty.c('PlayerCharacter', {
   hitPurpleEnemy : function(data){
   	this.stopMovement;
   	// var delay = Crafty.e('Delay');
-  	// delay.delay()
+  	// delay.delay()
+
   	// HIT SHARPY: if having duck element. game over. else takes damage depending on types
   	console.log("His enemy in hitPurpleEnemy");
     PurpleEnemy = data[0].obj;

@@ -68,8 +68,11 @@ Crafty.scene('Game', function() {
           
         }else if(Math.random() < .05 && x!=12){
           //Placing random enemies in the level
-          enemy = enemy_list[Math.round(Math.random()*2)];
-          Crafty.e(enemy,room).at(x,y);
+
+          var enemy = enemy_list[Math.round(Math.random()*2)];
+          var enemyObject = Crafty.e(enemy,room)
+          enemyObject.at(x,y);
+          enemyObject.moveAround();
           this.occupied[x][y] = true;
         }else if (at_carpet_top){
         	Crafty.e('TopCarpet',room).at(x,y);
