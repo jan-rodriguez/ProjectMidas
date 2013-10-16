@@ -282,7 +282,7 @@ Crafty.scene('Loading', function(){
     });
     
     // bullets
-    Crafty.sprite(32, 'assets/char_sprites/bulletobject.png',{
+    Crafty.sprite(10, 'assets/char_sprites/red_block.png',{
       bulletobject:[0,0],
     });
 
@@ -291,6 +291,8 @@ Crafty.scene('Loading', function(){
     Crafty.audio.add('Background_music_2', 'assets/music/start_up_screen_loop.mp3');
     Crafty.audio.add('Glass_break', 'assets/sound_effects/glass_break.mp3');
     Crafty.audio.add('Hit', 'assets/sound_effects/hit.wav');
+    Crafty.audio.add('Laser', 'assets/sound_effects/Laser_Shoot.wav');
+    Crafty.audio.add('Powerup', 'assets/sound_effects/Powerup.wav');
 
  
     // Now that our sprites are ready to draw, start the game
