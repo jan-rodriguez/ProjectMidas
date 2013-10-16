@@ -27,7 +27,12 @@ Crafty.c('Actor', {
     this.requires('2D, Canvas, Grid');
   },
 });
-
+Crafty.c('Room1');
+Crafty.c('Room2');
+Crafty.c('Room3');
+Crafty.c('Room4');
+Crafty.c('Room5');
+Crafty.c('Room6');
 
 
 // Items
@@ -114,6 +119,12 @@ Crafty.c('Water', {
     this.requires('Actor, Solid, tile_water');
   },
 });
+Crafty.c('Wall', {
+	  init: function() {
+	    this.requires('Actor, Solid, tile_blue_brick');
+	  },
+	 
+	});
 
 //Simple lava tile
 Crafty.c('Lava', {
@@ -133,8 +144,16 @@ Crafty.c('Lava2', {
 //Creating door that the player will walk through to get to different levels
 Crafty.c('Door', {
   init: function(){
-    this.requires('Actor, door_open');
+    this.requires('Actor, door_closed')
+    .doorOpen();
+    
   },
+  doorOpen: function(){
+	  if (this.has('door_closed')){
+		  this.toggleComponent('door_closed, door_open');  
+	  }
+
+  }
 });
 
 
@@ -218,12 +237,12 @@ Crafty.c('PlayerCharacter', {
     .fourway(4)
     .stopOnSolids()
     .onHit('Carpet', this.hitCarpet)
-    .onHit('Door', this.changeDoor)
+    //.onHit('Door', this.changeDoor)
     .onHit('Lava2', this.hitLava2)
 		.onHit('Enemy', function() {
 			this.stopMovement;
 		})
-    .onHit('Door', this.changeDoor)
+    //.onHit('Door', this.changeDoor)
     .onHit('RedEnemy', this.hitRedEnemy)
     .onHit('BlueEnemy', this.hitBlueEnemy)
     .onHit('PurpleEnemy', this.hitPurpleEnemy)
@@ -347,7 +366,7 @@ Crafty.c('PlayerCharacter', {
   	console.log(this.component);
   	item.destroy();
   },
-  changeDoor: function(data){
+ /* changeDoor: function(data){
   	console.log("Display hit door")
     door = data[0].obj;
     //If door is open
@@ -357,5 +376,5 @@ Crafty.c('PlayerCharacter', {
       //Door will be a solid, that the player cannot pass through
       door.addComponent('Solid');
     }
-  },
+  },*/
 });
