@@ -181,17 +181,17 @@ Crafty.scene('Loading', function(){
     });
 
     //Creating the enemies
-    Crafty.sprite(32, 'assets/char_sprites/red_man.png', {
+    Crafty.sprite(22, 32, 'assets/char_sprites/red_man.png', {
       red_enemy: [0,0],
     });
-    Crafty.sprite(32, 'assets/char_sprites/purple_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/purple_man.png',{
       purple_enemy: [0,0],
     });
     // Crafty.sprite(32, 'assets/char_sprites/yellow_man.png',{
       // yellow_enemy:[0,0],
     // });
 
-    Crafty.sprite(32, 'assets/char_sprites/blue_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/blue_man.png',{
       blue_enemy:[0,0],
     });
     //Load player sprite with a width of 22px and height of 32px
@@ -206,11 +206,11 @@ Crafty.scene('Loading', function(){
     Crafty.sprite(32, 'assets/char_sprites/duck.png',{
       duck:[0,0],
     });
-    Crafty.sprite(32, 'assets/char_sprites/duck_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/duck_man.png',{
       duck_man:[0,0],
     });
     // erasers
-    Crafty.sprite(32, 'assets/char_sprites/eraser_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/eraser_man.png',{
       eraser_man:[0,0],
     });
     Crafty.sprite(32, 'assets/char_sprites/eraser.png',{
@@ -218,7 +218,7 @@ Crafty.scene('Loading', function(){
     });
     
     // clays
-    Crafty.sprite(32, 'assets/char_sprites/clay_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/clay_man.png',{
       clay_man:[0,0],
     });
     Crafty.sprite(32, 'assets/char_sprites/clay.png',{
@@ -226,7 +226,7 @@ Crafty.scene('Loading', function(){
     });
        
     // dices
-		Crafty.sprite(32, 'assets/char_sprites/dice_man.png',{
+		Crafty.sprite(22, 32, 'assets/char_sprites/dice_man.png',{
       dice_man:[0,0],
     });
 		Crafty.sprite(32, 'assets/char_sprites/dice.png',{

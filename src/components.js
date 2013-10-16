@@ -106,7 +106,6 @@ Crafty.c('Enemy', {
       }
     }, 1000, this);
   },    
-//>>>>>>> 440b20d1f6d74dd3b2f8eaaf7f44028725db673e
 });
 Crafty.c('RedEnemy', {
 	health: 2000,
