@@ -85,18 +85,18 @@ Crafty.c('Enemy', {
   },
   //Method for enemies to take damage
   takeDamage:function(lost) {
-  	console.log(this.health);
   	this.health -= lost;
-  	console.log(this.health);
   	if (this.health < 0){
-      this.destroy()
+      this.kill()
     };
+  },
+  kill: function () {
+	  this.destroy();
+	  Crafty.trigger("EnemyDeath");
   },
   //Random moving around function for the enemies
   moveAround:function(){
-    console.log("randomly moving enemy");
     window.setInterval(function(enemy){
-      console.log("randomly moving enemy inside function");
       var rand = Math.random();
       if(rand<.3){
         enemy.tween({x: enemy.x + 50}, 50);
@@ -167,13 +167,13 @@ Crafty.c('Lava2', {
 //Creating door that the player will walk through to get to different levels
 Crafty.c('Door', {
   init: function(){
-    this.requires('Actor, door_closed')
-    .doorOpen();
+    this.requires('Actor, door_closed, Solid')
+    
     
   },
   doorOpen: function(){
 	  if (this.has('door_closed')){
-		  this.toggleComponent('door_closed, door_open');  
+		  this.toggleComponent('door_closed, door_open, Solid');  
 	  }
 
   }
@@ -212,7 +212,6 @@ Crafty.c('Carpet', {
 	    this.z = -1; 
 	  },
 		hitPlayer: function(){
-			console.log("ow");
 		  },
 
 	});
@@ -220,7 +219,6 @@ Crafty.c('TopCarpet', {
 	init:function(){
 		this.requires("Carpet");
 		this.hitPlayer =  function(){
-			console.log("banana");
 			Crafty.viewport.follow(this,0,(16*15));
 	  }
 	},
@@ -230,7 +228,6 @@ Crafty.c('BottomCarpet', {
 	init:function(){
 		this.requires("Carpet");
 		this.hitPlayer= function(){
-			console.log("ow");
 			Crafty.viewport.follow(this,0,(-16*15));
 		}
 	},
@@ -276,7 +273,6 @@ Crafty.c('PlayerCharacter', {
     .onHit('Item', this.hitItems)
     .bind("KeyDown", function(e) {
         if(e.keyCode === Crafty.keys.SPACE) {
-        	  console.log("Detect a space bar here");
             if(!this.shoot) {
                 this.shoot = true;
                 this.delay(function() {
@@ -325,7 +321,6 @@ Crafty.c('PlayerCharacter', {
   },
 
   hitLava2 : function(data) {
-  	console.log("hit lava 2");
   	lava2 = data[0].obj;
   	lava2.addComponent('Solid');
   	this.destroy();
@@ -333,10 +328,8 @@ Crafty.c('PlayerCharacter', {
   },
   hitRedEnemy : function(data){
   	this.stopMovement;
-  	console.log("His enemy in hitRedEnemy");
     redEnemy = data[0].obj;
-    console.log(this.getDamaged["red"][this.element]);
-    if (this.element === "eraser") {redEnemy.destroy(); }
+    if (this.element === "eraser") {redEnemy.kill(); }
     else {
     	if (this.element === "clay") { this.destroy() }
     	else {
@@ -352,9 +345,8 @@ Crafty.c('PlayerCharacter', {
   	// delay.delay()
 
   	// HIT SHARPY: if having duck element. game over. else takes damage depending on types
-  	console.log("His enemy in hitPurpleEnemy");
     PurpleEnemy = data[0].obj;
-    if (this.element === "eraser") {PurpleEnemy.destroy(); }
+    if (this.element === "eraser") {PurpleEnemy.kill(); }
     else {
     	if (this.element === "duck") { this.destroy() }
     	else {
@@ -367,9 +359,8 @@ Crafty.c('PlayerCharacter', {
   hitBlueEnemy: function(data){
   	this.stopMovement;
   	// hit ELECTRICITY: if having glass element, game over. else takes damage depending on types
-  	console.log("His enemy in hitPurpleEnemy");
   	blueEnemy = data[0].obj;
-    if (this.element === "eraser") {blueEnemy.destroy(); }
+    if (this.element === "eraser") {blueEnemy.kill(); }
     else {
     	if (this.element === "glass") { this.destroy() }
     	else {
@@ -384,13 +375,10 @@ Crafty.c('PlayerCharacter', {
     Carpet.hitPlayer();
   },
   hitItems: function(data){
-  	console.log("Hit some items");
   	item = data[0].obj;
   	this.element = item.element;
   	this.toggleComponent(this.component, item.component);
   	this.component = item.component;
-  	//console.log(this.element);
-  	console.log(this.component);
   	item.destroy();
   },
  /* changeDoor: function(data){

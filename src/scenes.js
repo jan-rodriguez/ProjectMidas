@@ -76,7 +76,6 @@ Crafty.scene('Game', function() {
           this.occupied[x][y] = true;
         }else if (at_carpet_top){
         	Crafty.e('TopCarpet',room).at(x,y);
-        	Crafty.e('Door',room).at(x,y);
         	this.occupied[x][y] = true
         }else if (at_carpet_bot){
         	Crafty.e('BottomCarpet',room).at(x,y);
@@ -108,9 +107,10 @@ Crafty.scene('Game', function() {
     Crafty.bind("EnemyDeath",function(){
     	for (var i = 1; i <7;i++){
     		var room = "Room"+String(i)
+    		console.log(!Crafty(room+" Enemy").length)
     		//Checks if there are no more enemies in room i (true if yes)
-    		if (!Crafty(room,"Enemy").length){
-    			Crafty(room,"Door")
+    		if (!Crafty(room+" Enemy").length){
+    			Crafty(room+" Door").doorOpen()
     		}
     	}
   });
