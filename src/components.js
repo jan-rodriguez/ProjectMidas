@@ -1,5 +1,4 @@
-//<<<<<<< HEAD
-// The Grid component allows an element to be located
+/// The Grid component allows an element to be located
 //  on a grid of tiles
 Crafty.c('Grid', {
   init: function() {
@@ -83,12 +82,14 @@ Crafty.c('Enemy', {
     this.requires('Actor, Tween')
     .attr({x: 0, y: 0});		// get rid solid class so that onHit function works
   },
+
   //Method for enemies to take damage
   takeDamage:function(lost) {
   	this.health -= lost;
   	if (this.health < 0){
       this.kill()
     };
+
   },
   kill: function () {
 	  this.destroy();
@@ -177,23 +178,14 @@ Crafty.c('Door', {
 	  }
 
   }
-});
-
-
-// Crafty.c('Wood', {
-  // init:function(){
-    // this.requires('Actor, tile_wood');
-  // },
-  // hitPlayer: function(){
-    // console.log("ow");
-    // Crafty.scene('Game');
-  // },
-// })
-
-//create the bullet component
-Crafty.c("bullet", {
-	init:function() {
-		this.requires("tile_wood")	
+});//create the bullet component
+Crafty.c("Bullet", {
+	w: 32, h: 32, z:50, alpha: 1.0, x: 0, y: 0,
+	element:"",
+	attack: {"red": {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
+			"purple" : {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
+			"blue" : {"clay": 10, "dice": Math.round(Math.random()*800), "duck": 10, "eraser" : 20, "glass": 10},
+			
 	},
     bullet: function(dir) {
         this.bind("enterframe", function() {
@@ -235,22 +227,83 @@ Crafty.c('BottomCarpet', {
 })
 
 
+=======
+	init:function() {
+		this.requires('Actor, bulletobject, 2D, DOM, Tween, Collision')
+		.onHit('RedEnemy', this.shootRedEnemy)
+		.onHit('PurpleEnemy', this.shootPurpleEnemy)
+		.onHit('BlueEnemy', this.shootPurpleEnemy);		
+  }
+  ,
+  bullet: function(dir){
+  	if (dir == "e") {
+  		this.tween({alpha: 0.0, x: this.x + 100, y: this.y}, 60);
+  	}
+  	else if (dir == "w"){this.tween({alpha: 0.0, x: this.x -100, y: this.y}, 60);}
+  },
+  shootRedEnemy: function(data){
+  	redEnemy = data[0].obj;
+  	redEnemy.takeDamage(this.attack["red"][this.element]);
+  },
+  shootPurpleEnemy: function(data){
+  	purpleEnemy = data[0].obj;
+  	purpleEnemy.takeDamage(this.attack["purple"][this.element]);
+  },
+  shootBlueEnemy: function(data){
+  	blueEnemy = data[0].obj;
+  	blueEnemy.takeDamage(this.attack["blue"][this.element]);
+  },
+});
+
+
+Crafty.c('Carpet', {
+	  init:function(){
+	    this.requires('Actor, tile_wood');
+	    this.z = -1; 
+	  },
+		hitPlayer: function(){
+			console.log("ow");
+		  },
+
+	});
+Crafty.c('TopCarpet', {
+	init:function(){
+		this.requires("Carpet");
+		this.hitPlayer =  function(){
+			console.log("banana");
+			Crafty.viewport.follow(this,0,(16*15));
+	  }
+	},
+
+});
+Crafty.c('BottomCarpet', {
+	init:function(){
+		this.requires("Carpet");
+		this.hitPlayer= function(){
+			console.log("ow");
+			Crafty.viewport.follow(this,0,(-16*15));
+		}
+	},
+
+})
+
+>>>>>>> fb1e147ecc049c9bdd32567bb694b96abb86cdd7
 
 // Player
 Crafty.c('PlayerCharacter', {
   //Health for the player
-  _health: 1000,
+  _health: 2000,
   element: "glass",
 	component: "spr_player",
 	attack: {
-		"red": {"glass" : 150,},
-		"blue": {"glass" : 0,},
-		"purple": {"glass" : 50,},
+		"red": {"clay": 0, "dice": Math.round(Math.random()*50), "duck": 1, "glass" : 10},
+		"blue": {"clay": 1, "dice": Math.round(Math.random()*50), "duck": 10, "glass" : 0},
+		"purple": {"clay": 10, "dice": Math.round(Math.random()*50), "duck": 0, "glass" : 1},
 	},
 	getDamaged:{
-		"red": {"glass" : 50,},
-		"blue": {"glass" : 0,},
-		"purple": {"glass" : 20,},
+		"red": {"clay": 25, "dice": Math.round(Math.random()*100), "duck": 10, "glass" : -10 },
+		"blue": {"clay": 10, "dice": Math.round(Math.random()*100), "duck": -10, "glass" : 25},
+		"purple": {"clay": -10, "dice": Math.round(Math.random()*100), "duck": 25, "glass" : 10},
 	},
 	facingRight: true,
 	shoot: false,
@@ -280,7 +333,7 @@ Crafty.c('PlayerCharacter', {
                 }, 100);
                 
                 //this.stop();
-                // Crafty.audio.play("shoot");             
+                //Crafty.audio.play("Hit");             
                 var bx, dir;
                 if(this.facingRight) {
                     //this.sprite(5,2,1,2);
@@ -288,14 +341,12 @@ Crafty.c('PlayerCharacter', {
                     dir = 'e';
                 } else {
                     //this.sprite(5,0,1,2);
-                    bx = this.x - 5;
+                    bx = this.x - 45;
                     dir = 'w';
                 }
-                
-                Crafty.e("2D, DOM, color, bullet").attr({x: bx, y: this.y + 31, w: 5, h: 2, z:50}).bullet(dir);
-                // var old = this.pos();
-                // this.trigger("change",old);
-
+                Crafty.e("Bullet").attr({x: bx, y: this.y, element: this.element}).bullet(dir);
+                var old = this.pos();
+                this.trigger("change",old);
             }
         }
         if(e.keyCode === Crafty.keys.RIGHT_ARROW) this.facingRight = true;
@@ -315,8 +366,8 @@ Crafty.c('PlayerCharacter', {
   stopMovement: function() {
     this._speed = 0;
     if (this._movement) {
-      this.x -= 2*this._movement.x;
-      this.y -= 2*this._movement.y;
+      this.x -= this._movement.x;
+      this.y -= this._movement.y;
     }
   },
 
@@ -341,9 +392,6 @@ Crafty.c('PlayerCharacter', {
   },
   hitPurpleEnemy : function(data){
   	this.stopMovement;
-  	// var delay = Crafty.e('Delay');
-  	// delay.delay()
-
   	// HIT SHARPY: if having duck element. game over. else takes damage depending on types
     PurpleEnemy = data[0].obj;
     if (this.element === "eraser") {PurpleEnemy.kill(); }
@@ -381,15 +429,5 @@ Crafty.c('PlayerCharacter', {
   	this.component = item.component;
   	item.destroy();
   },
- /* changeDoor: function(data){
-  	console.log("Display hit door")
-    door = data[0].obj;
-    //If door is open
-    if(door.has('door_open')){
-      //door will now appear closed
-      door.toggleComponent('door_closed, door_open');
-      //Door will be a solid, that the player cannot pass through
-      door.addComponent('Solid');
-    }
-  },*/
+
 });
