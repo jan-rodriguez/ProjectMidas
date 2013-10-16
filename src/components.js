@@ -86,8 +86,10 @@ Crafty.c('Enemy', {
   init:function(){
     this.requires('Actor, Tween,Collision')
     .attr({x: 0, y: 0});	
+
     this.onHit('Solid', this.hitSolid);// get rid solid class so that onHit function works
   },
+
   hitSolid:function(){
 	  this.toggleComponent("Tween");
 	  this.toggleComponent("Tween");
@@ -173,8 +175,9 @@ Crafty.c('Lava', {
 //Slightly different lava tile to keep the level from looking bland
 Crafty.c('Lava2', {
   init: function() {
-    this.requires('Actor, tile_lava_2');  // get rid of Solid so that onHit function could work
-  },
+    this.requires('Actor, tile_lava_2');
+
+     },
 });
 
 //Creating door that the player will walk through to get to different levels
@@ -240,7 +243,6 @@ Crafty.c('Carpet', {
 	    this.z = -1; 
 	  },
 		hitPlayer: function(){
-			console.log("ow");
 		  },
 
 	});
@@ -248,7 +250,6 @@ Crafty.c('TopCarpet', {
 	init:function(){
 		this.requires("Carpet");
 		this.hitPlayer =  function(){
-			console.log("banana");
 			Crafty.viewport.follow(this,0,(16*15));
 	  }
 	},
@@ -258,7 +259,6 @@ Crafty.c('BottomCarpet', {
 	init:function(){
 		this.requires("Carpet");
 		this.hitPlayer= function(){
-			console.log("ow");
 			Crafty.viewport.follow(this,0,(-16*15));
 		}
 	},
@@ -325,7 +325,7 @@ Crafty.c('PlayerCharacter', {
                 this.trigger("change",old);
             }
         }
-        if(e.keyCode === Crafty.keys.RIGHT_ARROW){
+        if(e.keyCode === Crafty.keys.RIGHT_ARROW  || e.keyCode === Crafty.keys.D){
           this.facingRight = true;
           if(this.has('glass_man_left')){
             this.toggleComponent( 'glass_man_left', 'glass_man_right');
@@ -339,7 +339,7 @@ Crafty.c('PlayerCharacter', {
             this.toggleComponent( 'clay_man_left', 'clay_man_right');
           }
         } 
-        if(e.keyCode === Crafty.keys.LEFT_ARROW){
+        if(e.keyCode === Crafty.keys.LEFT_ARROW || e.keyCode === Crafty.keys.A){
           this.facingRight = false;
           if(this.has('glass_man_right')){
             this.toggleComponent( 'glass_man_right', 'glass_man_left');

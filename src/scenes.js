@@ -5,6 +5,7 @@ Crafty.scene('Game', function() {
   Crafty.audio.play('Background_music_2', -1);
   //Paused variable to keep track of whether the game is paused or not
   var paused = false;
+  this.atRoom = 1
 
   //ArrayList of all enemies
   var enemy_list = ['RedEnemy', 'BlueEnemy', 'PurpleEnemy'];
@@ -24,10 +25,10 @@ Crafty.scene('Game', function() {
   // Player character, placed at 5, 5 on our grid
   this.player = Crafty.e('PlayerCharacter').at(5, 16*6 -5);
   this.occupied[this.player.at().x][this.player.at().y] = true;
- 
+ Crafty.bind("BuildRoom",function(room_number){
   // Place a tree at every edge square on our grid of 16x16 tiles
   for (var x = 0; x < Game.map_grid.width; x++) {
-    for (var y = 0; y < Game.map_grid.height; y++) {
+    for (var y =((6-(room_number-1))*Game.map_grid.height/6.0); (y >= (6-room_number)*Game.map_grid.height/6.0) && (y <=((6-(room_number-1))*Game.map_grid.height/6.0)) ; y--) {
       var at_edge = x == 0 || x == Game.map_grid.width - 1 || y == 0 || y == Game.map_grid.height - 1 ;
       var room_wall_top = (y ==16*1|| y ==16*2|| y ==16*3|| y ==16*4|| y ==16*5) && x!=12;
       var room_wall_bot = (y ==16*1-1|| y ==16*2-1|| y ==16*3-1|| y ==16*4-1|| y ==16*5-1) && x!=12;
@@ -82,11 +83,13 @@ Crafty.scene('Game', function() {
         	Crafty.e('BottomCarpet',room).at(x,y);
         	Crafty.e('Door',room).at(x,y);
         	this.occupied[x][y] = true;
+        	
 
         }
       }
     }
   }
+ })
 
   //Pausing
   Crafty.bind('KeyDown', function(e){
@@ -106,16 +109,24 @@ Crafty.scene('Game', function() {
       }
   })
     Crafty.bind("EnemyDeath",function(){
-    	for (var i = 1; i <7;i++){
-    		var room = "Room"+String(i)
-    		console.log(!Crafty(room+" Enemy").length)
+    		var room = "Room"+String(this.atRoom)
+       		console.log(!Crafty("Enemy").length);
     		//Checks if there are no more enemies in room i (true if yes)
     		if (!Crafty(room+" Enemy").length){
-    			Crafty(room+" Door").doorOpen()
+    			if (room =="Room6"){
+    				Crafty.trigger("GameWon")
+    			}else{
+    				Crafty(room+" Door").doorOpen()
+    				this.atRoom += 1
+    				Crafty.trigger("BuildRoom",this.atRoom)
     		}
-    	}
-  });
+    		}
+    });
+  Crafty.bind("GameWon",function(){
+	  Crafty.scene("Victory");
+  })
   Crafty.viewport.y = -16*32*5;
+  Crafty.trigger("BuildRoom",1)
 });
 
 // Title Scene
@@ -166,6 +177,13 @@ Crafty.scene('Title', function(){
   Crafty.bind('KeyDown', title_bindings);
 });
 
+Crafty.scene("Victory",function(){
+	Crafty.e("2D, DOM, Text")
+	.text("You have won")
+	.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
+    .css($text_css);
+	})
+	
 // Loading scene
 // -------------
 // Handles the loading of binary assets such as images and audio files
