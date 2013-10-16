@@ -2,6 +2,7 @@
 // -------------
 // Runs the core gameplay loop
 Crafty.scene('Game', function() {
+  Crafty.audio.play('Background_music_2', -1);
   //Paused variable to keep track of whether the game is paused or not
   var paused = false;
 
@@ -117,6 +118,54 @@ Crafty.scene('Game', function() {
   Crafty.viewport.y = -16*32*5;
 });
 
+// Title Scene
+//------------
+Crafty.scene('Title', function(){
+  Crafty.e('2D, DOM, Text')
+    .text('MIDAS')
+    .attr({ x: 0, y: 60, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#CCCCCC')
+    .textFont({size:'150px', weight: 'bold'});
+
+  Crafty.e('2D, DOM, Text')
+    .text('[SPACE] to begin')
+    .attr({ x: 0, y: 250, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#ffd700')
+    .textFont({size:'25px', weight: 'bold'});
+
+  Crafty.e('2D, DOM, Text')
+    .text('[P] to pause')
+    .attr({ x: 0, y: 300, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#ffd700')
+    .textFont({size:'25px', weight: 'bold'});
+
+  Crafty.e('2D, DOM, Text')
+    .text('All sounds made by bfxer')
+    .attr({ x: 0, y: Game.height() - 100, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#111111')
+    .textFont({size:'20px', weight: 'italic'});
+
+  Crafty.e('2D, DOM, Text')
+    .text('Philip, Jan, Chau, Arturo, Justin, Pedro')
+    .attr({ x: 0, y: Game.height() - 40, h: 10, w: Game.width() })
+    .css($text_css)
+    .textColor('#111111')
+    .textFont({size:'20px', weight: 'italic'});
+
+  title_bindings = function(e){
+    if (e.key == Crafty.keys.SPACE){
+      Crafty.unbind('KeyDown', title_bindings)
+      Crafty.scene('Game');
+    }
+  }
+
+  Crafty.bind('KeyDown', title_bindings);
+});
+
 // Loading scene
 // -------------
 // Handles the loading of binary assets such as images and audio files
@@ -181,17 +230,17 @@ Crafty.scene('Loading', function(){
     });
 
     //Creating the enemies
-    Crafty.sprite(32, 'assets/char_sprites/red_man.png', {
+    Crafty.sprite(22, 32, 'assets/char_sprites/red_man.png', {
       red_enemy: [0,0],
     });
-    Crafty.sprite(32, 'assets/char_sprites/purple_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/purple_man.png',{
       purple_enemy: [0,0],
     });
     // Crafty.sprite(32, 'assets/char_sprites/yellow_man.png',{
       // yellow_enemy:[0,0],
     // });
 
-    Crafty.sprite(32, 'assets/char_sprites/blue_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/blue_man.png',{
       blue_enemy:[0,0],
     });
     //Load player sprite with a width of 22px and height of 32px
@@ -206,11 +255,11 @@ Crafty.scene('Loading', function(){
     Crafty.sprite(32, 'assets/char_sprites/duck.png',{
       duck:[0,0],
     });
-    Crafty.sprite(32, 'assets/char_sprites/duck_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/duck_man.png',{
       duck_man:[0,0],
     });
     // erasers
-    Crafty.sprite(32, 'assets/char_sprites/eraser_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/eraser_man.png',{
       eraser_man:[0,0],
     });
     Crafty.sprite(32, 'assets/char_sprites/eraser.png',{
@@ -218,7 +267,7 @@ Crafty.scene('Loading', function(){
     });
     
     // clays
-    Crafty.sprite(32, 'assets/char_sprites/clay_man.png',{
+    Crafty.sprite(22, 32, 'assets/char_sprites/clay_man.png',{
       clay_man:[0,0],
     });
     Crafty.sprite(32, 'assets/char_sprites/clay.png',{
@@ -226,20 +275,26 @@ Crafty.scene('Loading', function(){
     });
        
     // dices
-		Crafty.sprite(32, 'assets/char_sprites/dice_man.png',{
+		Crafty.sprite(22, 32, 'assets/char_sprites/dice_man.png',{
       dice_man:[0,0],
     });
 		Crafty.sprite(32, 'assets/char_sprites/dice.png',{
       dice:[0,0],
+    });
+    
+    // bullets
+    Crafty.sprite(32, 'assets/char_sprites/bulletobject.png',{
+      bulletobject:[0,0],
     });
 
     //Adding audio files
     Crafty.audio.add('Background_music', 'assets/music/snappy_lo.mp3');
     Crafty.audio.add('Background_music_2', 'assets/music/start_up_screen_loop.mp3');
     Crafty.audio.add('Glass_break', 'assets/sound_effects/glass_break.mp3');
+    Crafty.audio.add('Hit', 'assets/sound_effects/hit.mp3');
 
  
     // Now that our sprites are ready to draw, start the game
-    Crafty.scene('Game');
+    Crafty.scene('Title');
   });
 });

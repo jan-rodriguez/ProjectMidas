@@ -1,4 +1,3 @@
-
 // The Grid component allows an element to be located
 //  on a grid of tiles
 Crafty.c('Grid', {
@@ -90,12 +89,8 @@ Crafty.c('Enemy', {
   },
   //Method for enemies to take damage
   takeDamage:function(lost) {
-  	console.log(this.health);
   	this.health -= lost;
-  	console.log(this.health);
-  	if (this.health < 0){
-      this.destroy()
-    };
+  	if (this.health < 0) this.destroy();
   },
   //Random moving around function for the enemies
   moveAround:function(){
@@ -181,31 +176,42 @@ Crafty.c('Door', {
 
   }
 });
-
-
-// Crafty.c('Wood', {
-  // init:function(){
-    // this.requires('Actor, tile_wood');
-  // },
-  // hitPlayer: function(){
-    // console.log("ow");
-    // Crafty.scene('Game');
-  // },
-// })
-
+//<<<<<<< HEAD
 //create the bullet component
-Crafty.c("bullet", {
-	init:function() {
-		this.requires("tile_wood")	
+Crafty.c("Bullet", {
+	w: 32, h: 32, z:50, alpha: 1.0, x: 0, y: 0,
+	element:"",
+	attack: {"red": {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
+			"purple" : {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
+			"blue" : {"clay": 10, "dice": Math.round(Math.random()*800), "duck": 10, "eraser" : 20, "glass": 10},
+			
 	},
-    bullet: function(dir) {
-        this.bind("enterframe", function() {
-            this.move(dir, 15);
-            if(this.x > Crafty.viewport.width || this.x < 0) 
-                this.destroy();
-        });
-        return this;
-    }
+
+	init:function() {
+		this.requires('Actor, bulletobject, 2D, DOM, Tween, Collision')
+		.onHit('RedEnemy', this.shootRedEnemy)
+		.onHit('PurpleEnemy', this.shootPurpleEnemy)
+		.onHit('BlueEnemy', this.shootPurpleEnemy);		
+  }
+  ,
+  bullet: function(dir){
+  	if (dir == "e") {
+  		this.tween({alpha: 0.0, x: this.x + 100, y: this.y}, 60);
+  	}
+  	else if (dir == "w"){this.tween({alpha: 0.0, x: this.x -100, y: this.y}, 60);}
+  },
+  shootRedEnemy: function(data){
+  	redEnemy = data[0].obj;
+  	redEnemy.takeDamage(this.attack["red"][this.element]);
+  },
+  shootPurpleEnemy: function(data){
+  	purpleEnemy = data[0].obj;
+  	purpleEnemy.takeDamage(this.attack["purple"][this.element]);
+  },
+  shootBlueEnemy: function(data){
+  	blueEnemy = data[0].obj;
+  	blueEnemy.takeDamage(this.attack["blue"][this.element]);
+  },
 });
 
 
@@ -227,8 +233,8 @@ Crafty.c('TopCarpet', {
 			Crafty.viewport.follow(this,0,(16*15));
 	  }
 	},
-});
 
+});
 Crafty.c('BottomCarpet', {
 	init:function(){
 		this.requires("Carpet");
@@ -237,24 +243,24 @@ Crafty.c('BottomCarpet', {
 			Crafty.viewport.follow(this,0,(-16*15));
 		}
 	},
-})
 
+})
 
 // Player
 Crafty.c('PlayerCharacter', {
   //Health for the player
-  _health: 1000,
+  _health: 2000,
   element: "glass",
 	component: "spr_player",
 	attack: {
-		"red": {"glass" : 150,},
-		"blue": {"glass" : 0,},
-		"purple": {"glass" : 50,},
+		"red": {"clay": 0, "dice": Math.round(Math.random()*50), "duck": 1, "glass" : 10},
+		"blue": {"clay": 1, "dice": Math.round(Math.random()*50), "duck": 10, "glass" : 0},
+		"purple": {"clay": 10, "dice": Math.round(Math.random()*50), "duck": 0, "glass" : 1},
 	},
 	getDamaged:{
-		"red": {"glass" : 50,},
-		"blue": {"glass" : 0,},
-		"purple": {"glass" : 20,},
+		"red": {"clay": 25, "dice": Math.round(Math.random()*100), "duck": 10, "glass" : -10 },
+		"blue": {"clay": 10, "dice": Math.round(Math.random()*100), "duck": -10, "glass" : 25},
+		"purple": {"clay": -10, "dice": Math.round(Math.random()*100), "duck": 25, "glass" : 10},
 	},
 	facingRight: true,
 	shoot: false,
@@ -277,7 +283,6 @@ Crafty.c('PlayerCharacter', {
     .onHit('Item', this.hitItems)
     .bind("KeyDown", function(e) {
         if(e.keyCode === Crafty.keys.SPACE) {
-        	  console.log("Detect a space bar here");
             if(!this.shoot) {
                 this.shoot = true;
                 this.delay(function() {
@@ -285,7 +290,7 @@ Crafty.c('PlayerCharacter', {
                 }, 100);
                 
                 //this.stop();
-                // Crafty.audio.play("shoot");             
+                //Crafty.audio.play("Hit");             
                 var bx, dir;
                 if(this.facingRight) {
                     //this.sprite(5,2,1,2);
@@ -293,14 +298,12 @@ Crafty.c('PlayerCharacter', {
                     dir = 'e';
                 } else {
                     //this.sprite(5,0,1,2);
-                    bx = this.x - 5;
+                    bx = this.x - 45;
                     dir = 'w';
                 }
-                
-                Crafty.e("2D, DOM, color, bullet").attr({x: bx, y: this.y + 31, w: 5, h: 2, z:50}).bullet(dir);
-                // var old = this.pos();
-                // this.trigger("change",old);
-
+                Crafty.e("Bullet").attr({x: bx, y: this.y, element: this.element}).bullet(dir);
+                var old = this.pos();
+                this.trigger("change",old);
             }
         }
         if(e.keyCode === Crafty.keys.RIGHT_ARROW) this.facingRight = true;
@@ -320,13 +323,12 @@ Crafty.c('PlayerCharacter', {
   stopMovement: function() {
     this._speed = 0;
     if (this._movement) {
-      this.x -= 2*this._movement.x;
-      this.y -= 2*this._movement.y;
+      this.x -= this._movement.x;
+      this.y -= this._movement.y;
     }
   },
 
   hitLava2 : function(data) {
-  	console.log("hit lava 2");
   	lava2 = data[0].obj;
   	lava2.addComponent('Solid');
   	this.destroy();
@@ -335,9 +337,7 @@ Crafty.c('PlayerCharacter', {
 
   hitRedEnemy : function(data){
   	this.stopMovement;
-  	console.log("His enemy in hitRedEnemy");
     redEnemy = data[0].obj;
-    console.log(this.getDamaged["red"][this.element]);
     if (this.element === "eraser") {redEnemy.destroy(); }
     else {
     	if (this.element === "clay") { this.destroy() }
@@ -351,11 +351,7 @@ Crafty.c('PlayerCharacter', {
 
   hitPurpleEnemy : function(data){
   	this.stopMovement;
-  	// var delay = Crafty.e('Delay');
-  	// delay.delay()
-
   	// HIT SHARPY: if having duck element. game over. else takes damage depending on types
-  	console.log("His enemy in hitPurpleEnemy");
     PurpleEnemy = data[0].obj;
     if (this.element === "eraser") {PurpleEnemy.destroy(); }
     else {
@@ -370,7 +366,6 @@ Crafty.c('PlayerCharacter', {
   hitBlueEnemy: function(data){
   	this.stopMovement;
   	// hit ELECTRICITY: if having glass element, game over. else takes damage depending on types
-  	console.log("His enemy in hitPurpleEnemy");
   	blueEnemy = data[0].obj;
     if (this.element === "eraser") {blueEnemy.destroy(); }
     else {
@@ -388,25 +383,10 @@ Crafty.c('PlayerCharacter', {
   },
 
   hitItems: function(data){
-  	console.log("Hit some items");
   	item = data[0].obj;
   	this.element = item.element;
   	this.toggleComponent(this.component, item.component);
   	this.component = item.component;
-  	//console.log(this.element);
-  	console.log(this.component);
   	item.destroy();
   },
-
- /* changeDoor: function(data){
-  	console.log("Display hit door")
-    door = data[0].obj;
-    //If door is open
-    if(door.has('door_open')){
-      //door will now appear closed
-      door.toggleComponent('door_closed, door_open');
-      //Door will be a solid, that the player cannot pass through
-      door.addComponent('Solid');
-    }
-  },*/
 });

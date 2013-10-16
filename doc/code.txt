@@ -6,9 +6,17 @@ Ex:
 - I modified method Blah so that it now accepts an int instead of a string...
 
 
-
+10/15 by Chau
+I'm not sure what you guys had discussed on Wednesday, so I decide to have some elements as followed to make
+the game more simple:
 - Glass: water ability, can kill red enemies (fire), vulnerable to blue enemies (electricity)
 - Orange: ducky ability, can kill blue enemy (electricity), vulnerable to purple enemies (sharpy)
 - White: eraser ability, can kill enemies instantly
 - Gray: clay ability, can kill purple enemies (sharpy), vulnerable to red enemies (fire)
 - Dice: multiple colors, give random damages, receive random damages
+
+Character can shoot bullets that also have the character's element
+Character changes color when picking an object
+Battles with different enemies have different damages.
+Touching enemies also damages the enemies or makes yourself get hit by them, depending on your/their elements
+The only obstacle is lava
