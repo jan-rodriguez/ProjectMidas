@@ -43,35 +43,35 @@ Crafty.c('Item', {
 
 Crafty.c('Duck', {
 	element:"duck",
-	component: "duck_man",
+	component: "duck_man_right",
   init:function(){
     this.requires('Item, duck');		// get rid solid class so that onHit function works
   }
 });
 Crafty.c('Dice', {
 	element:"dice",
-	component: "dice_man",
+	component: "dice_man_left",
   init:function(){
     this.requires('Item, dice');		// get rid solid class so that onHit function works
   }
 });
 Crafty.c('Eraser', {
 	element:"eraser",
-	component: "eraser_man",
+	component: "eraser_man_left",
   init:function(){
     this.requires('Item, eraser');		// get rid solid class so that onHit function works
   }
 });
 Crafty.c('Clay', {
 	element:"clay",
-	component: "clay_man",
+	component: "clay_man_left",
   init:function(){
     this.requires('Item, clay');		// get rid solid class so that onHit function works
   }
 });
 Crafty.c('Glass', {
 	element:"glass",
-	component: "spr_player",
+	component: "glass_man_left",
   init:function(){
     this.requires('Item, glass');		// get rid solid class so that onHit function works
   }
@@ -88,6 +88,7 @@ Crafty.c('Enemy', {
 	  this.toggleComponent("Tween");
   },
   	
+
   //Method for enemies to take damage
   takeDamage:function(lost) {
   	this.health -= lost;
@@ -173,8 +174,7 @@ Crafty.c('Lava2', {
 //Creating door that the player will walk through to get to different levels
 Crafty.c('Door', {
   init: function(){
-    this.requires('Actor, door_closed, Solid')
-    
+    this.requires('Actor, door_closed,Solid')
     
   },
   doorOpen: function(){
@@ -183,14 +183,14 @@ Crafty.c('Door', {
 	  }
 
   }
-});//create the bullet component
+});
+//create the bullet component
 Crafty.c("Bullet", {
 	w: 32, h: 32, z:50, alpha: 1.0, x: 0, y: 0,
 	element:"",
 	attack: {"red": {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
 			"purple" : {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
 			"blue" : {"clay": 10, "dice": Math.round(Math.random()*800), "duck": 10, "eraser" : 20, "glass": 10},
-			
 	},
   
 
@@ -259,7 +259,7 @@ Crafty.c('PlayerCharacter', {
   //Health for the player
   _health: 2000,
   element: "glass",
-	component: "spr_player",
+	component: "glass_man_right",
 	attack: {
 		"red": {"clay": 0, "dice": Math.round(Math.random()*50), "duck": 1, "glass" : 10},
 		"blue": {"clay": 1, "dice": Math.round(Math.random()*50), "duck": 10, "glass" : 0},
@@ -273,7 +273,7 @@ Crafty.c('PlayerCharacter', {
 	facingRight: true,
 	shoot: false,
   init: function(){
-    this.requires('Actor, Fourway, Collision, Delay, spr_player, Keyboard, Stop')
+    this.requires('Actor, Fourway, Collision, Delay, glass_man_right, Keyboard, Stop')
     .fourway(4)
 
     .stopOnSolids()
@@ -314,8 +314,34 @@ Crafty.c('PlayerCharacter', {
                 this.trigger("change",old);
             }
         }
-        if(e.keyCode === Crafty.keys.RIGHT_ARROW) this.facingRight = true;
-        if(e.keyCode === Crafty.keys.LEFT_ARROW) this.facingRight = false;
+        if(e.keyCode === Crafty.keys.RIGHT_ARROW){
+          this.facingRight = true;
+          if(this.has('glass_man_left')){
+            this.toggleComponent( 'glass_man_left', 'glass_man_right');
+          }else if(this.has('dice_man_left')){
+            this.toggleComponent( 'dice_man_left', 'dice_man_right');
+          }else if(this.has('duck_man_left')){
+            this.toggleComponent( 'duck_man_left', 'duck_man_right');
+          }else if(this.has('eraser_man_left')){
+            this.toggleComponent( 'eraser_man_left', 'eraser_man_right');
+          }else if(this.has('clay_man_left')){
+            this.toggleComponent( 'clay_man_left', 'clay_man_right');
+          }
+        } 
+        if(e.keyCode === Crafty.keys.LEFT_ARROW){
+          this.facingRight = false;
+          if(this.has('glass_man_right')){
+            this.toggleComponent( 'glass_man_right', 'glass_man_left');
+          }else if(this.has('dice_man_right')){
+            this.toggleComponent( 'dice_man_right', 'dice_man_left');
+          }else if(this.has('duck_man_right')){
+            this.toggleComponent( 'duck_man_right', 'duck_man_left');
+          }else if(this.has('eraser_man_right')){
+            this.toggleComponent( 'eraser_man_right', 'eraser_man_left');
+          }else if(this.has('clay_man_right')){
+            this.toggleComponent( 'clay_man_right', 'clay_man_left');
+          }
+        }
     })
         this.z = 20;
   },
