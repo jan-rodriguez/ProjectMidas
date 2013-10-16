@@ -214,11 +214,17 @@ Crafty.scene('Loading', function(){
 		Crafty.sprite(32, 'assets/char_sprites/dice.png',{
       dice:[0,0],
     });
+    
+    // bullets
+    Crafty.sprite(32, 'assets/char_sprites/bulletobject.png',{
+      bulletobject:[0,0],
+    });
 
     //Adding audio files
     Crafty.audio.add('Background_music', 'assets/music/snappy_lo.mp3');
     Crafty.audio.add('Background_music_2', 'assets/music/start_up_screen_loop.mp3');
     Crafty.audio.add('Glass_break', 'assets/sound_effects/glass_break.mp3');
+    Crafty.audio.add('Hit', 'assets/sound_effects/hit.mp3');
 
  
     // Now that our sprites are ready to draw, start the game
