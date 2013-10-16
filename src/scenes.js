@@ -33,47 +33,56 @@ Crafty.scene('Game', function() {
       var at_carpet_top = (y ==(16*1) -1|| y ==(16*2)-1|| y ==(16*3)-1|| y ==(16*4)-1|| y ==(16*5)-1) && x==12;
       var at_carpet_bot = (y ==(16*1) || y ==(16*2)|| y ==(16*3)|| y ==(16*4)|| y ==(16*5)) && x==12;
       if(!this.occupied[x][y]){
+    	  var room_num = 7 - Math.ceil((y+1)/16)
+    	  var room = "Room" + String(room_num)
         if (at_edge|| room_wall_top ||room_wall_bot) {
           // Place a tree entity at the current tile
-          Crafty.e('Door').at(x, y);
+          Crafty.e('Wall',room).at(x, y);
           this.occupied[x][y] = true;
         }else if(Math.random() < .05 && x!=12){
           //Placing lava randomly on the level
-          Crafty.e('Lava2').at(x,y);
+          Crafty.e('Lava2',room).at(x,y);
           this.occupied[x][y] = true;
+          
           
         }else if(Math.random() < .01 && x!=12){
           //Placing Duck randomly on the level
-          Crafty.e('Duck').at(x,y);
+          Crafty.e('Duck',room).at(x,y);
           this.occupied[x][y] = true;    
         }else if(Math.random() < .01 && x!=12){
           //Placing CLay randomly on the level
-          Crafty.e('Clay').at(x,y);
+          Crafty.e('Clay',room).at(x,y);
           this.occupied[x][y] = true; 
         }else if(Math.random() < .01 && x!=12){
           //Placing Glass randomly on the level
-          Crafty.e('Glass').at(x,y);
+          Crafty.e('Glass',room).at(x,y);
           this.occupied[x][y] = true; 
        }else if(Math.random() < .005 && x!=12){
           //Placing Eraser randomly on the level
-          Crafty.e('Eraser').at(x,y);
+          Crafty.e('Eraser',room).at(x,y);
           this.occupied[x][y] = true;           
         }else if(Math.random() < .01 && x!=12){
           //Placing Dices randomly on the level
-          Crafty.e('Dice').at(x,y);
+          Crafty.e('Dice',room).at(x,y);
           this.occupied[x][y] = true;             
           
         }else if(Math.random() < .05 && x!=12){
           //Placing random enemies in the level
-          enemy = enemy_list[Math.round(Math.random()*2)];
-          Crafty.e(enemy).at(x,y);
+
+          var enemy = enemy_list[Math.round(Math.random()*2)];
+          var enemyObject = Crafty.e(enemy,room)
+          enemyObject.at(x,y);
+          enemyObject.moveAround();
           this.occupied[x][y] = true;
         }else if (at_carpet_top){
-        	Crafty.e('TopCarpet').at(x,y);
+        	Crafty.e('TopCarpet',room).at(x,y);
+        	Crafty.e('Door',room).at(x,y);
         	this.occupied[x][y] = true
         }else if (at_carpet_bot){
-        	Crafty.e('BottomCarpet').at(x,y);
-        	this.occupied[x][y] = true
+        	Crafty.e('BottomCarpet',room).at(x,y);
+        	Crafty.e('Door',room).at(x,y);
+        	this.occupied[x][y] = true;
+
         }
       }
     }
@@ -95,6 +104,15 @@ Crafty.scene('Game', function() {
       }
       Crafty.pause();
       }
+  })
+    Crafty.bind("EnemyDeath",function(){
+    	for (var i = 1; i <7;i++){
+    		var room = "Room"+String(i)
+    		//Checks if there are no more enemies in room i (true if yes)
+    		if (!Crafty(room,"Enemy").length){
+    			Crafty(room,"Door")
+    		}
+    	}
   });
   Crafty.viewport.y = -16*32*5;
 });

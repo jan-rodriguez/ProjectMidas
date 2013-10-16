@@ -1,5 +1,4 @@
-//<<<<<<< HEAD
-// The Grid component allows an element to be located
+/// The Grid component allows an element to be located
 //  on a grid of tiles
 Crafty.c('Grid', {
   init: function() {
@@ -27,7 +26,12 @@ Crafty.c('Actor', {
     this.requires('2D, Canvas, Grid');
   },
 });
-
+Crafty.c('Room1');
+Crafty.c('Room2');
+Crafty.c('Room3');
+Crafty.c('Room4');
+Crafty.c('Room5');
+Crafty.c('Room6');
 
 
 // Items
@@ -75,12 +79,34 @@ Crafty.c('Glass', {
 //Enemies
 Crafty.c('Enemy', {
   init:function(){
-    this.requires('Actor');		// get rid solid class so that onHit function works
+    this.requires('Actor, Tween')
+    .attr({x: 0, y: 0});		// get rid solid class so that onHit function works
   },
+  //Method for enemies to take damage
   takeDamage:function(lost) {
   	this.health -= lost;
   	if (this.health < 0) this.destroy();
-  }  
+  },
+  //Random moving around function for the enemies
+  moveAround:function(){
+    console.log("randomly moving enemy");
+    window.setInterval(function(enemy){
+      console.log("randomly moving enemy inside function");
+      var rand = Math.random();
+      if(rand<.3){
+        enemy.tween({x: enemy.x + 50}, 50);
+      }else if(rand<.6){
+        enemy.tween({x:enemy.x - 50}, 50);
+      }
+      rand = Math.random();
+      if(rand <.3){
+        enemy.tween({y: enemy.y + 50}, 50);
+      }else if(rand <.6){
+        enemy.tween({y:enemy.y - 50}, 50);
+      }
+    }, 1000, this);
+  },    
+//>>>>>>> 440b20d1f6d74dd3b2f8eaaf7f44028725db673e
 });
 Crafty.c('RedEnemy', {
 	health: 2000,
@@ -112,6 +138,12 @@ Crafty.c('Water', {
     this.requires('Actor, Solid, tile_water');
   },
 });
+Crafty.c('Wall', {
+	  init: function() {
+	    this.requires('Actor, Solid, tile_blue_brick');
+	  },
+	 
+	});
 
 //Simple lava tile
 Crafty.c('Lava', {
@@ -131,16 +163,24 @@ Crafty.c('Lava2', {
 //Creating door that the player will walk through to get to different levels
 Crafty.c('Door', {
   init: function(){
-    this.requires('Actor, door_open');
+    this.requires('Actor, door_closed')
+    .doorOpen();
+    
   },
+  doorOpen: function(){
+	  if (this.has('door_closed')){
+		  this.toggleComponent('door_closed, door_open');  
+	  }
+
+  }
 });
-//create the bullet component
+//<<<<<<< HEAD//create the bullet component
 Crafty.c("Bullet", {
 	w: 32, h: 32, z:50, alpha: 1.0, x: 0, y: 0,
 	element:"",
-	attack: {"red": {"clay": 10, "dice": Math.round(Math.random()*100), "duck": 10, "eraser" : 20, "glass" : 10},
-			"purple" : {"clay": 10, "dice": Math.round(Math.random()*100), "duck": 10, "eraser" : 20, "glass" : 10},
-			"blue" : {"clay": 10, "dice": Math.round(Math.random()*100), "duck": 10, "eraser" : 20, "glass": 10},
+	attack: {"red": {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
+			"purple" : {"clay": 10, "dice": Math.round(Math.random()*80), "duck": 10, "eraser" : 20, "glass" : 10},
+			"blue" : {"clay": 10, "dice": Math.round(Math.random()*800), "duck": 10, "eraser" : 20, "glass": 10},
 			
 	},
 	init:function() {
@@ -203,36 +243,35 @@ Crafty.c('BottomCarpet', {
 })
 
 
-
 // Player
 Crafty.c('PlayerCharacter', {
   //Health for the player
-  _health: 1000,
+  _health: 2000,
   element: "glass",
 	component: "spr_player",
 	attack: {
-		"red": {"glass" : 150,},
-		"blue": {"glass" : 0,},
-		"purple": {"glass" : 50,},
+		"red": {"clay": 0, "dice": Math.round(Math.random()*50), "duck": 1, "glass" : 10},
+		"blue": {"clay": 1, "dice": Math.round(Math.random()*50), "duck": 10, "glass" : 0},
+		"purple": {"clay": 10, "dice": Math.round(Math.random()*50), "duck": 0, "glass" : 1},
 	},
 	getDamaged:{
-		"red": {"glass" : 50,},
-		"blue": {"glass" : 0,},
-		"purple": {"glass" : 20,},
+		"red": {"clay": 25, "dice": Math.round(Math.random()*100), "duck": 10, "glass" : -10 },
+		"blue": {"clay": 10, "dice": Math.round(Math.random()*100), "duck": -10, "glass" : 25},
+		"purple": {"clay": -10, "dice": Math.round(Math.random()*100), "duck": 25, "glass" : 10},
 	},
 	facingRight: true,
 	shoot: false,
   init: function(){
     this.requires('Actor, Fourway, Collision, Delay, spr_player, Keyboard, Stop')
     .fourway(4)
+
     .stopOnSolids()
     .onHit('Carpet', this.hitCarpet)
-    .onHit('Door', this.changeDoor)
     .onHit('Lava2', this.hitLava2)
 		.onHit('Enemy', function() {
 			this.stopMovement;
 		})
-    .onHit('Door', this.changeDoor)
+    //.onHit('Door', this.changeDoor)
     .onHit('RedEnemy', this.hitRedEnemy)
     .onHit('BlueEnemy', this.hitBlueEnemy)
     .onHit('PurpleEnemy', this.hitPurpleEnemy)
@@ -259,10 +298,9 @@ Crafty.c('PlayerCharacter', {
                     bx = this.x - 45;
                     dir = 'w';
                 }
-
                 Crafty.e("Bullet").attr({x: bx, y: this.y, element: this.element}).bullet(dir);
                 var old = this.pos();
-                this.trigger("change",old);
+                this.trigger("change",old);
             }
         }
         if(e.keyCode === Crafty.keys.RIGHT_ARROW) this.facingRight = true;
@@ -345,14 +383,5 @@ Crafty.c('PlayerCharacter', {
   	this.component = item.component;
   	item.destroy();
   },
-  changeDoor: function(data){
-    door = data[0].obj;
-    //If door is open
-    if(door.has('door_open')){
-      //door will now appear closed
-      door.toggleComponent('door_closed, door_open');
-      //Door will be a solid, that the player cannot pass through
-      door.addComponent('Solid');
-    }
-  },
+
 });
